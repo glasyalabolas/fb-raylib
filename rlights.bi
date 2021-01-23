@@ -1,5 +1,4 @@
-/'
-/**********************************************************************************************
+/'**********************************************************************************************
 *
 *   raylib.lights - Some useful functions to deal with lights data
 *
@@ -29,8 +28,8 @@
 *
 *     3. This notice may not be removed or altered from any source distribution.
 *
-**********************************************************************************************/
-'/
+**********************************************************************************************'/
+
 #ifndef RLIGHTS_H
 #define RLIGHTS_H
 
@@ -40,28 +39,22 @@
 '' Defines and Macros
 ''----------------------------------------------------------------------------------
 #define         MAX_LIGHTS            4         '' Max lights supported by shader
-#define         LIGHT_DISTANCE        3.5!      '' Light distance from world center
-#define         LIGHT_HEIGHT          1.0!      '' Light height position
+#define         LIGHT_DISTANCE        3.5f      '' Light distance from world center
+#define         LIGHT_HEIGHT          1.0f      '' Light height position
 
 ''----------------------------------------------------------------------------------
 '' Types and Structures Definition
 ''----------------------------------------------------------------------------------
-'enum LightType
-'  LIGHT_DIRECTIONAL
-'  LIGHT_POINT
-'end enum
 const as long _
-  LIGHT_DIRECTIONAL => 0, _
-  LIGHT_POINT => 1
-
-type as long LightType
+  LIGHT_DIRECTIONAL = 0, _
+  LIGHT_POINT = 1
 
 type Light
-  as bool enabled
-  as LightType type
+  as long type
   as Vector3 position
   as Vector3 target
-  as Color color
+  as RayColor color
+  as long enabled
   as long _
     enabledLoc, _
     typeLoc, _
@@ -76,29 +69,20 @@ extern "C" '' Prevents name mangling of functions
 '' Module Functions Declaration
 ''----------------------------------------------------------------------------------
 '' Defines a light and get locations from PBR shader
-declare sub CreateLight( _
-  type_ as long, _
-  pos_ as Vector3, _
-  targ as Vector3, _
-  color_ as Color, _
-  shader_ as Shader )
+declare sub CreateLight( type_ as long, pos_ as Vector3, targ as Vector3, color_ as RayColor, shader_ as Shader )
 
 '' Send to PBR shader light values
-declare sub UpdateLightValues( _
-  shader_ as Shader, _
-  light_ as Light )
+declare sub UpdateLightValues( shader_ as Shader, light_ as Light )
 
 end extern
 
 #endif
 
-/'
-/***********************************************************************************
+/'***********************************************************************************
 *
 *   RLIGHTS IMPLEMENTATION
 *
-************************************************************************************/
-'/
+************************************************************************************'/
 #if defined( RLIGHTS_IMPLEMENTATION )
 
 #include once "raylib.bi"
@@ -106,89 +90,66 @@ end extern
 ''----------------------------------------------------------------------------------
 '' Global Variables Definition
 ''----------------------------------------------------------------------------------
-dim shared as Light _
-  lights( 0 to MAX_LIGHTS - 1 )
-dim shared as long _
-  lightsCount => 0 '' Current amount of created lights
+dim shared as Light lights( 0 to MAX_LIGHTS - 1 )
+dim shared as long lightsCount = 0 '' Current amount of created lights
 
 extern "C"
   '' Defines a light and get locations from PBR shader
-  sub CreateLight( _
-    type_ as long, _
-    pos_ as Vector3, _
-    targ as Vector3, _
-    color_ as Color, _
-    shader_ as Shader )
+  sub CreateLight( type_ as long, pos_ as Vector3, target_ as Vector3, color_ as RayColor, shader_ as Shader )
+    dim as Light light_
     
-    dim as Light _
-      light
-    
-    if ( lightsCount < MAX_LIGHTS ) then
-      light.enabled => true
-      light.type => type_
-      light.position => pos_
-      light.target => targ
-      light.color => color_
-    
-      'char enabledName[32] = "lights[x].enabled\0"
-      'char typeName[32] = "lights[x].type\0"
-      'char posName[32] = "lights[x].position\0"
-      'char targetName[32] = "lights[x].target\0"
-      'char colorName[32] = "lights[x].color\0"
-      'enabledName[7] = '0' + lightsCount;
-      'typeName[7] = '0' + lightsCount;
-      'posName[7] = '0' + lightsCount;
-      'targetName[7] = '0' + lightsCount;
-      'colorName[7] = '0' + lightsCount;
+    if( lightsCount < MAX_LIGHTS ) then
+      with light_
+        .enabled = 1
+        .type = type_
+        .position = pos_
+        .target = target_
+        .color = color_
+      end with
       
       dim as string _
-        enabledName => "lights[" & lightsCount & "].enabled", _
-        typeName => "lights[" & lightsCount & "].type", _
-        posName => "lights[" & lightsCount & "].position", _
-        targetName => "lights[" & lightsCount & "].target", _
-        colorName => "lights[" & lightsCount & "].color"
+        enabledName = "lights[" & lightsCount & "].enabled", _
+        typeName = "lights[" & lightsCount & "].type", _
+        posName = "lights[" & lightsCount & "].position", _
+        targetName = "lights[" & lightsCount & "].target", _
+        colorName = "lights[" & lightsCount & "].color"
       
-      light.enabledLoc => GetShaderLocation( shader_, strPtr( enabledName) )
-      light.typeLoc => GetShaderLocation( shader_, strPtr( typeName) )
-      light.posLoc => GetShaderLocation( shader_, strPtr( posName ) )
-      light.targetLoc => GetShaderLocation( shader_, strPtr( targetName ) )
-      light.colorLoc => GetShaderLocation( shader_, strPtr( colorName ) )
+      with light_
+        .enabledLoc = GetShaderLocation( shader_, strPtr( enabledName ) )
+        .typeLoc = GetShaderLocation( shader_, strPtr( typeName ) )
+        .posLoc = GetShaderLocation( shader_, strPtr( posName ) )
+        .targetLoc = GetShaderLocation( shader_, strPtr( targetName ) )
+        .colorLoc = GetShaderLocation( shader_, strPtr( colorName ) )
+      end with
       
-      UpdateLightValues( shader_, light )
+      UpdateLightValues( shader_, light_ )
       
-      lights( lightsCount ) => light
-      lightsCount +=> 1
+      lights( lightsCount ) = light_
+      lightsCount += 1
     end if
   end sub
   
   '' Send to PBR shader light values
-  sub UpdateLightValues( _
-    shader_ as Shader, _
-    light_ as Light )
-    
+  sub UpdateLightValues( shader_ as Shader, light_ as Light )
     '' Send to shader light enabled state and type
-    SetShaderValue( shader_, light_.enabledLoc, @light.enabled, UNIFORM_INT )
-    SetShaderValue( shader_, light_.typeLoc, @light.type, UNIFORM_INT )
+    SetShaderValue( shader_, light_.enabledLoc, @light_.enabled, UNIFORM_INT )
+    SetShaderValue( shader_, light_.typeLoc, @light_.type, UNIFORM_INT )
     
     '' Send to shader light position values
-    dim as single _
-      position( 0 to 2 ) => { light_.position.x, light_.position.y, light_.position.z }
+    dim as single position( 0 to 2 ) = { _
+      light_.position.x, light_.position.y, light_.position.z }
     
     SetShaderValue( shader_, light_.posLoc, @position( 0 ), UNIFORM_VEC3 )
     
     '' Send to shader light target position values
-    dim as single _
-      target( 0 to 2 ) => { light_.target.x, light_.target.y, light_.target.z }
+    dim as single target( 0 to 2 ) = { _
+      light_.target.x, light_.target.y, light_.target.z }
     
     SetShaderValue( shader_, light_.targetLoc, @target( 0 ), UNIFORM_VEC3 )
     
     '' Send to shader light color values
-    dim as single _
-      diff( 0 to 3 ) => { _
-        light_.color.r / 255, _
-        light_.color.g / 255, _
-        light_.color.b / 255, _
-        light_.color.a / 255 }
+    dim as single diff( 0 to 3 ) = { _
+      light_.color.r / 255, light_.color.g / 255, light_.color.b / 255, light_.color.a / 255 }
     
     SetShaderValue( shader_, light_.colorLoc, @diff( 0 ), UNIFORM_VEC4 )
   end sub
