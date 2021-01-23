@@ -5,6 +5,11 @@
 
 #define bool boolean
 
+'' TODO: support for more platforms
+#if defined( __FB_WIN32__ ) orElse defined( __FB_LINUX__ )
+  #define PLATFORM_DESKTOP
+#endif
+
 #inclib "raylib"
 
 extern "C"
