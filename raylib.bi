@@ -170,13 +170,21 @@ end type
 type RenderTexture2D as RenderTexture
 
 type NPatchInfo
+	declare constructor()
+	declare constructor( as Rectangle, as long, as long, as long, as long, as long )
+	
 	source as Rectangle
 	left as long
 	top as long
 	right as long
 	bottom as long
-	as long type
+	as long type_
 end type
+
+constructor NPatchInfo() : end constructor
+constructor NPatchInfo( source_ as Rectangle, left_ as long, top_ as long, right_ as long, bottom_ as long, type__ as long )
+  source = source_ : left = left_ : top = top_ : right = right_ : bottom = bottom_ : type_ = type__
+end constructor
 
 type CharInfo
 	value as long
