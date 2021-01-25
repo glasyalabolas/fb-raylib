@@ -39,6 +39,10 @@ private function Vector2Add(v1 as Vector2, v2 as Vector2) as Vector2
     return result
 end function
 
+private function Vector2Multiply( v1 as Vector2, v2 as Vector2 ) as Vector2
+  return( Vector2( v1.x + v2.x, v1.y + v2.y ) )
+end function
+
 private function Vector2Subtract(v1 as Vector2, v2 as Vector2) as Vector2
     dim as Vector2 result = Vector2(v1.x - v2.x, v1.y - v2.y)
     return result
