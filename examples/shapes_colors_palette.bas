@@ -17,6 +17,7 @@
 const as long _
   screenWidth = 800, screenHeight = 600
 
+SetConfigFlags( FLAG_MSAA_4X_HINT ) '' Enable anti-aliasing if available
 InitWindow( screenWidth, screenHeight, "raylib [shapes] example - colors palette" )
 
 dim as RayColor colors( 0 to MAX_COLORS_COUNT - 1 ) = { _

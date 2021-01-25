@@ -15,6 +15,7 @@
 const as long _
   screenWidth = 800, screenHeight = 450
 
+SetConfigFlags( FLAG_MSAA_4X_HINT ) '' Enable anti-aliasing if available
 InitWindow( screenWidth, screenHeight, "raylib [shapes] example - bouncing ball" )
 
 var _

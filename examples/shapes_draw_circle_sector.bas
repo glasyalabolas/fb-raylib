@@ -20,6 +20,7 @@
 const as long _
   screenWidth = 800, screenHeight = 450
 
+SetConfigFlags( FLAG_MSAA_4X_HINT ) '' Enable anti-aliasing if available
 InitWindow( screenWidth, screenHeight, "raylib [shapes] example - draw circle sector" )
 
 var center = Vector2( ( GetScreenWidth() - 300 ) / 2, GetScreenHeight() / 2 )
