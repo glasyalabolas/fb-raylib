@@ -30,9 +30,6 @@
 #include once "../raylib.bi"
 #include once "../raymath.bi"
 
-'#include <stddef.h>
-'#include <stdint.h>
-
 #if defined( PLATFORM_DESKTOP )
   #define GLSL_VERSION            330
 #else   '' PLATFORM_RPI, PLATFORM_ANDROID, PLATFORM_WEB
