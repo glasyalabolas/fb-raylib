@@ -16,6 +16,11 @@ extern "C"
 
 #define RAYLIB_H
 #define RLAPI
+
+#ifndef NULL
+  #define NULL 0
+#endif
+
 const PI = 3.14159265358979323846f
 const DEG2RAD = PI / 180.0f
 const RAD2DEG = 180.0f / PI
