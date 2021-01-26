@@ -411,7 +411,7 @@ end enum
   This function converts an array into a zstring ptr ptr, to be
   able to overload functions that take them as parameters to use
   FreeBasic's native strings. A hack to use until the header is
-  reimplemented to use FreeBasic's native strings when appropriate.
+  reimplemented to use FreeBasic's native strings where appropriate.
 '/
 #if not defined( toPtrArray )
   private function toPtrArray( a() as string ) as zstring ptr ptr
