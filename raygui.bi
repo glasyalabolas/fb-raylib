@@ -406,6 +406,27 @@ end enum
 ' Module Functions Declaration
 '-----------------------------------------=1
 
+/'
+  <paul>
+  This function converts an array into a zstring ptr ptr, to be
+  able to overload functions that take them as parameters to use
+  FreeBasic's native strings. A hack to use until the header is
+  reimplemented to use FreeBasic's native strings when appropriate.
+'/
+#if not defined( toPtrArray )
+  private function toPtrArray( a() as string ) as zstring ptr ptr
+    static as zstring ptr p()
+    
+    redim p( lbound( a ) to ubound( a ) )
+    
+    for i as integer = lbound( p ) to ubound( p )
+      p( i ) = strPtr( a( i ) )
+    next
+    
+    return( @p( 0 ) )
+  end function
+#endif
+
 ' State modification functions
 RAYGUIDEF sub GuiEnable()                                         ' Enable gui controls (global state)
 RAYGUIDEF sub GuiDisable()                                        ' Disable gui controls (global state)
@@ -461,7 +482,8 @@ RAYGUIDEF Function GuiGrid(bounds As Rectangle, spacing as single, subdivs as lo
 
 ' Advance controls set
 RAYGUIDEF Function GuiListView(bounds As Rectangle, text0 As Const zstring Ptr, scrollIndex as long ptr, active as long) As long            ' List View control, returns selected list item index
-RAYGUIDEF Function GuiListViewEx(bounds As Rectangle, text0 As Const zstring ptr ptr, count as long , focus as long ptr, scrollIndex as long Ptr, active as long) As long   ' List View with extended parameters
+RAYGUIDEF Function GuiListViewEx overload(bounds As Rectangle, text0 As Const zstring ptr ptr, count as long , focus as long ptr, scrollIndex as long Ptr, active as long) As long   ' List View with extended parameters
+RAYGUIDEF Function GuiListViewEx(bounds As Rectangle, text0() as string, count as long , focus as long ptr, scrollIndex as long Ptr, active as long) As long   ' List View with extended parameters
 RAYGUIDEF Function GuiMessageBox(bounds As Rectangle, title As Const zstring Ptr,  message As Const zstring Ptr,  buttons As Const zstring Ptr) As long             ' Message Box control, displays a message
 RAYGUIDEF Function GuiTextInputBox(bounds As Rectangle,  title As Const zstring Ptr,  message As Const zstring Ptr,  buttons As Const zstring Ptr, text as zstring Ptr)  As long  ' Text Input Box control, ask for text
 RAYGUIDEF Function GuiColorPicker(bounds As Rectangle, color as Color) As Color                                          ' Color Picker control (multiple color controls)
@@ -2404,7 +2426,7 @@ Function GuiListView(bounds As Rectangle, text0 As Const zstring Ptr, scrollInde
 End Function
 
 ' List View control with extended parameters
-Function GuiListViewEx(bounds As Rectangle, text0 As Const zstring Ptr Ptr, count as long , focus as long ptr, scrollIndex as long ptr, active as long) As long
+Function GuiListViewEx overload(bounds As Rectangle, text0 As Const zstring Ptr Ptr, count as long , focus as long ptr, scrollIndex as long ptr, active as long) As long
 	Dim As GuiControlState state = guiState
 	Dim As long itemFocused = iif(focus = NULL, -1 , *focus)
 	Dim As long itemSelected = active
@@ -2552,6 +2574,11 @@ Function GuiListViewEx(bounds As Rectangle, text0 As Const zstring Ptr Ptr, coun
 
 	return itemSelected
 End function
+
+'' Overload to accept a native string array instead of a C one
+function GuiListViewEx( bounds As Rectangle, text_() as string, count as long, focus as long ptr, scrollIndex as long ptr, active as long ) as long
+  return( GuiListViewEx( bounds, toPtrArray( text_() ), count, focus, scrollIndex, active ) )
+end function
 
 ' Color Panel control
 Function GuiColorPanelEx(bounds As Rectangle, color0 as Color, hue As Single) As Color

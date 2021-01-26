@@ -164,6 +164,7 @@ do while( not exitWindow )
     
     '' Second GUI column
     listViewActive = GuiListView( Rectangle( 165, 25, 140, 140 ), !"Charmander;Bulbasaur;#18#Squirtel;Pikachu;Eevee;Pidgey", @listViewScrollIndex, listViewActive )
+    listViewExActive = GuiListViewEx( Rectangle( 165, 180, 140, 200 ), listViewExList(), 8, @listViewExFocus, @listViewExScrollIndex, listViewExActive )
     
     toggleGroupActive = GuiToggleGroup( Rectangle( 165, 400, 140, 25 ), !"#1#ONE\n#3#TWO\n#8#THREE\n#23#", toggleGroupActive )
     

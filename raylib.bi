@@ -739,6 +739,27 @@ enum
 	NPT_3PATCH_HORIZONTAL
 end enum
 
+/'
+  <paul>
+  This function converts an array into a zstring ptr ptr, to be
+  able to overload functions that take them as parameters to use
+  FreeBasic's native strings. A hack to use until the header is
+  reimplemented to use FreeBasic's native strings when appropriate.
+'/
+#if not defined( toPtrArray )
+  private function toPtrArray( a() as string ) as zstring ptr ptr
+    static as zstring ptr p()
+    
+    redim p( lbound( a ) to ubound( a ) )
+    
+    for i as integer = lbound( p ) to ubound( p )
+      p( i ) = strPtr( a( i ) )
+    next
+    
+    return( @p( 0 ) )
+  end function
+#endif
+
 type TraceLogCallback as sub(byval logType as long, byval text as const zstring ptr, byval args as va_list)
 declare sub InitWindow(byval width as long, byval height as long, byval title as const zstring ptr)
 declare function WindowShouldClose() as bool
