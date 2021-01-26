@@ -3,9 +3,10 @@
 extern "C"
 
 #define PHYSAC_H
+
 '' TODO: #define PHYSACDEF extern
-#define PHYSAC_MALLOC(size) malloc(size)
-#define PHYSAC_FREE(ptr) free(ptr)
+#define PHYSAC_MALLOC(size) allocate(size)
+#define PHYSAC_FREE(ptr) deallocate(ptr)
 const PHYSAC_MAX_BODIES = 64
 const PHYSAC_MAX_MANIFOLDS = 4096
 const PHYSAC_MAX_VERTICES = 24
@@ -23,6 +24,64 @@ enum
 end enum
 
 type PhysicsBody as PhysicsBodyData ptr
+
+type Matrix2x2
+	m00 as single
+	m01 as single
+	m10 as single
+	m11 as single
+end type
+
+type PolygonData
+	vertexCount as ulong
+	positions(0 to 23) as Vector2
+	normals(0 to 23) as Vector2
+end type
+
+type PhysicsShape
+	as PhysicsShapeType type
+	body as PhysicsBody
+	radius as single
+	transform as Matrix2x2
+	vertexData as PolygonData
+end type
+
+type PhysicsBodyData
+	id as ulong
+	enabled as bool
+	position as Vector2
+	velocity as Vector2
+	force as Vector2
+	angularVelocity as single
+	torque as single
+	orient as single
+	inertia as single
+	inverseInertia as single
+	mass as single
+	inverseMass as single
+	staticFriction as single
+	dynamicFriction as single
+	restitution as single
+	useGravity as bool
+	isGrounded as bool
+	freezeOrient as bool
+	shape as PhysicsShape
+end type
+
+type PhysicsManifoldData
+	id as ulong
+	bodyA as PhysicsBody
+	bodyB as PhysicsBody
+	penetration as single
+	normal as Vector2
+	contacts(0 to 1) as Vector2
+	contactsCount as ulong
+	restitution as single
+	dynamicFriction as single
+	staticFriction as single
+end type
+
+type PhysicsManifold as PhysicsManifoldData ptr
 declare sub InitPhysics()
 declare sub RunPhysicsStep()
 declare sub SetPhysicsTimeStep(byval delta as double)
