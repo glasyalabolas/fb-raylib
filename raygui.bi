@@ -130,13 +130,13 @@
 #ifndef RAYGUI_BI
 #define RAYGUI_BI
 
-#define RAYGUI_VERSION  "3.5-dev"
+#define RAYGUI_VERSION  "2.6-dev"
 
 #If Not defined(RAYGUI_STANDALONE)
-#include "raylib.bi"
+#include "../raylib.bi"
 #endif
 
-' Define functions scope to be used integerernally (static) or externally (extern) to the module including this file
+' Define functions scope to be used internally (static) or externally (extern) to the module including this file
 #if defined(_WIN32)
 ' Microsoft attibutes to tell compiler that symbols are imported/exported from a .dll
 #if defined(BUILD_LIBTYPE_SHARED)
@@ -183,14 +183,6 @@ extern "C"             ' Prevents name mangling of functions
 ' NOTE: Some types are required for RAYGUI_STANDALONE usage
 '-----------------------------------------=1
 #if defined(RAYGUI_STANDALONE)
-#ifndef __cplusplus
-' boolean type
-#ifndef true
-enum boolean
-false, true
-end enum
-#endif
-#endif
 
 ' Vector2 type
 type Vector2
@@ -224,11 +216,11 @@ end type
 ' TODO: Texture2D type is very coupled to raylib, mostly required by GuiImageButton()
 ' It should be redesigned to be provided by user
 type Texture2D
-	As    UInteger id        ' OpenGL texture id
-	width0 As Integer              ' Texture base width
-	height0 As Integer             ' Texture base height
-	As    integer mipmaps            ' Mipmap levels, 1 by default
-	As   integer format             ' Data format (PixelFormat type)
+	As    ulong id        ' OpenGL texture id
+	width0 As long              ' Texture base width
+	height0 As long             ' Texture base height
+	As    long mipmaps            ' Mipmap levels, 1 by default
+	As   long format             ' Data format (PixelFormat type)
 end type
 
 ' Font character info
@@ -237,8 +229,8 @@ type CharInfo As CharInfo
 ' TODO: Font type is very coupled to raylib, mostly required by GuiLoadStyle()
 ' It should be redesigned to be provided by user
 type Font
-	As        integer baseSize           ' Base size (default chars height)
-	charsCount as Integer         ' Number of characters
+	As        long baseSize           ' Base size (default chars height)
+	charsCount as long         ' Number of characters
 	texture as Texture2D       ' Characters texture atlas
 	As   Rectangle Ptr recs        ' Characters rectangles in texture
 	As  CharInfo Ptr chars        ' Characters info data
@@ -249,7 +241,7 @@ end type
 type GuiStyleProp
 	As Unsigned Short controlId
 	As Unsigned short propertyId
-	As Integer propertyValue
+	As long propertyValue
 end type
 
 ' Gui control state
@@ -420,16 +412,16 @@ RAYGUIDEF sub GuiDisable()                                        ' Disable gui 
 RAYGUIDEF Sub GuiLock()                                           ' Lock gui controls (global state)
 RAYGUIDEF Sub GuiUnlock()                                         ' Unlock gui controls (global state)
 RAYGUIDEF Sub GuiFade(Alpha0 As Single )                                    ' Set gui controls alpha (global state), alpha goes from 0.0f to 1.0f
-RAYGUIDEF sub GuiSetState(state As Integer )                                  ' Set gui state (global state)
-RAYGUIDEF Function GuiGetState() As integer                                        ' Get gui state (global state)
+RAYGUIDEF sub GuiSetState(state As long )                                  ' Set gui state (global state)
+RAYGUIDEF Function GuiGetState() As long                                        ' Get gui state (global state)
 
 ' Font set/get functions
 RAYGUIDEF sub GuiSetFont(font As Font)                                   ' Set gui custom font (global state)
 RAYGUIDEF function GuiGetFont() As Font                                       ' Get gui custom font (global state)
 
 ' Style set/get functions
-RAYGUIDEF Sub GuiSetStyle( control As Integer, Propertys As Integer ,value As Integer)       ' Set one style property
-RAYGUIDEF Function GuiGetStyle(control As Integer , Propertys As Integer ) As integer                  ' Get one style property
+RAYGUIDEF Sub GuiSetStyle( control As long, Propertys As long ,value As long)       ' Set one style property
+RAYGUIDEF Function GuiGetStyle(control As long , Propertys As long ) As long                  ' Get one style property
 
 ' Tooltips set functions
 RAYGUIDEF Sub GuiEnableTooltip()                                  ' Enable gui tooltips
@@ -451,27 +443,27 @@ RAYGUIDEF function GuiLabelButton(bounds As Rectangle, text0 As Const zstring Pt
 RAYGUIDEF Function GuiImageButton(bounds As Rectangle, text0 As Const zstring Ptr, texture as Texture2D ) As boolean                   ' Image button control, returns true when clicked
 RAYGUIDEF Function GuiImageButtonEx(bounds As Rectangle, text0 As Const zstring Ptr, texture as Texture2D , texSource as Rectangle ) As boolean    ' Image button extended control, returns true when clicked
 RAYGUIDEF Function GuiToggle(bounds As Rectangle, text0 As Const zstring Ptr, active as boolean) As boolean                              ' Toggle Button control, returns true when active
-RAYGUIDEF function GuiToggleGroup(bounds As Rectangle, text0 As Const zstring Ptr, active as integer) As integer                         ' Toggle Group control, returns active toggle index
+RAYGUIDEF function GuiToggleGroup(bounds As Rectangle, text0 As Const zstring Ptr, active as long) As long                         ' Toggle Group control, returns active toggle index
 RAYGUIDEF Function GuiCheckBox(bounds As Rectangle, text0 As Const zstring Ptr,checked as boolean)  As boolean                         ' Check Box control, returns true when active
-RAYGUIDEF Function GuiComboBox(bounds As Rectangle, text0 As Const zstring Ptr, active as Integer)  As integer                            ' Combo Box control, returns selected item index
-RAYGUIDEF Function GuiDropdownBox(bounds As Rectangle, text0 As Const zstring Ptr, active as integer ptr, editMode as boolean) As boolean         ' Dropdown Box control, returns selected item
-RAYGUIDEF Function GuiSpinner(bounds As Rectangle, text0 As Const zstring Ptr, value as integer ptr, minValue as integer, maxValue as Integer, editMode as boolean)  As boolean    ' Spinner control, returns selected value
-RAYGUIDEF Function GuiValueBox(bounds As Rectangle, text0 As Const zstring Ptr, value as integer Ptr, minValue as Integer, maxValue as Integer, editMode as boolean)  As boolean   ' Value Box control, updates input text with numbers
-RAYGUIDEF Function GuiTextBox(bounds As Rectangle, text0 as zstring Ptr, textSize as integer, editMode as boolean)   As boolean                 ' Text Box control, updates input text
-RAYGUIDEF Function GuiTextBoxMulti(bounds As Rectangle, text0 as zstring Ptr, textSize as Integer, editMode as boolean)  As boolean             ' Text Box control with multiple lines
+RAYGUIDEF Function GuiComboBox(bounds As Rectangle, text0 As Const zstring Ptr, active as long)  As long                            ' Combo Box control, returns selected item index
+RAYGUIDEF Function GuiDropdownBox(bounds As Rectangle, text0 As Const zstring Ptr, active as long ptr, editMode as boolean) As boolean         ' Dropdown Box control, returns selected item
+RAYGUIDEF Function GuiSpinner(bounds As Rectangle, text0 As Const zstring Ptr, value as long ptr, minValue as long, maxValue as long, editMode as boolean)  As boolean    ' Spinner control, returns selected value
+RAYGUIDEF Function GuiValueBox(bounds As Rectangle, text0 As Const zstring Ptr, value as long Ptr, minValue as long, maxValue as long, editMode as boolean)  As boolean   ' Value Box control, updates input text with numbers
+RAYGUIDEF Function GuiTextBox(bounds As Rectangle, text0 as zstring Ptr, textSize as long, editMode as boolean)   As boolean                 ' Text Box control, updates input text
+RAYGUIDEF Function GuiTextBoxMulti(bounds As Rectangle, text0 as string, textSize as long, editMode as boolean)  As boolean             ' Text Box control with multiple lines
 RAYGUIDEF function GuiSlider(bounds As Rectangle, textLeft As Const zstring Ptr, textRight As Const zstring Ptr, value as single, minValue as single, maxValue as Single)  As Single     ' Slider control, returns selected value
 RAYGUIDEF Function GuiSliderBar(bounds As Rectangle, textLeft As Const zstring Ptr, textRight As Const zstring Ptr, value as Single, minValue as Single, maxValue as Single) As Single   ' Slider Bar control, returns selected value
 RAYGUIDEF Function GuiProgressBar(bounds As Rectangle, textLeft As Const zstring Ptr, textRight As Const zstring Ptr, value as Single, minValue as Single, maxValue as Single) As Single ' Progress Bar control, shows current progress value
 RAYGUIDEF Sub GuiStatusBar(bounds As Rectangle, text0 As Const zstring Ptr)                                        ' Status Bar control, shows info text
 RAYGUIDEF Sub GuiDummyRec(bounds As Rectangle, text0 As Const zstring Ptr)                                         ' Dummy control for placeholders
-RAYGUIDEF function GuiScrollBar(bounds As Rectangle, value as integer, minValue as Integer, maxValue as Integer) As integer                   ' Scroll Bar control
-RAYGUIDEF Function GuiGrid(bounds As Rectangle, spacing as single, subdivs as integer) As Vector2                               ' Grid control
+RAYGUIDEF function GuiScrollBar(bounds As Rectangle, value as long, minValue as long, maxValue as long) As long                   ' Scroll Bar control
+RAYGUIDEF Function GuiGrid(bounds As Rectangle, spacing as single, subdivs as long) As Vector2                               ' Grid control
 
 ' Advance controls set
-RAYGUIDEF Function GuiListView(bounds As Rectangle, text0 As Const zstring Ptr, scrollIndex as integer ptr, active as Integer) As integer            ' List View control, returns selected list item index
-RAYGUIDEF Function GuiListViewEx(bounds As Rectangle,  text0 As Const zstring Ptr ptr, count as integer , focus as integer ptr, scrollIndex as integer Ptr, active as Integer) As Integer   ' List View with extended parameters
-RAYGUIDEF Function GuiMessageBox(bounds As Rectangle,  title As Const zstring Ptr,  message As Const zstring Ptr,  buttons As Const zstring Ptr) As Integer             ' Message Box control, displays a message
-RAYGUIDEF Function GuiTextInputBox(bounds As Rectangle,  title As Const zstring Ptr,  message As Const zstring Ptr,  buttons As Const zstring Ptr, text as zstring Ptr)  As Integer  ' Text Input Box control, ask for text
+RAYGUIDEF Function GuiListView(bounds As Rectangle, text0 As Const zstring Ptr, scrollIndex as long ptr, active as long) As long            ' List View control, returns selected list item index
+RAYGUIDEF Function GuiListViewEx(bounds As Rectangle, text0 As Const zstring ptr ptr, count as long , focus as long ptr, scrollIndex as long Ptr, active as long) As long   ' List View with extended parameters
+RAYGUIDEF Function GuiMessageBox(bounds As Rectangle, title As Const zstring Ptr,  message As Const zstring Ptr,  buttons As Const zstring Ptr) As long             ' Message Box control, displays a message
+RAYGUIDEF Function GuiTextInputBox(bounds As Rectangle,  title As Const zstring Ptr,  message As Const zstring Ptr,  buttons As Const zstring Ptr, text as zstring Ptr)  As long  ' Text Input Box control, ask for text
 RAYGUIDEF Function GuiColorPicker(bounds As Rectangle, color as Color) As Color                                          ' Color Picker control (multiple color controls)
 RAYGUIDEF Function GuiColorPanel(bounds As Rectangle, color as Color) As Color                                          ' Color Panel control
 RAYGUIDEF Function GuiColorBarAlpha(bounds As Rectangle, alpha as single) As Single                                       ' Color Bar Alpha control
@@ -482,24 +474,24 @@ RAYGUIDEF Sub GuiLoadStyle( fileName As zstring ptr)              ' Load style f
 RAYGUIDEF Sub GuiLoadStyleDefault()                       ' Load style default over global style
 
 /'
-typedef GuiStyle (uinteger *)
+typedef GuiStyle (ulong *)
 RAYGUIDEF GuiStyle LoadGuiStyle( fileName As Const zstring Ptr)          ' Load style from file (.rgs)
 RAYGUIDEF sub UnloadGuiStyle(GuiStyle style)                  ' Unload style
 '/
 
-RAYGUIDEF  Function GuiIconText( iconId as integer, text As Const zstring Ptr) As Const zstring Ptr ' Get text with icon id prepended (if supported)
+RAYGUIDEF  Function GuiIconText( iconId as long, text As Const zstring Ptr) As Const zstring Ptr ' Get text with icon id prepended (if supported)
 
 #if defined(RAYGUI_SUPPORT_ICONS)
 ' Gui icons functionality
-RAYGUIDEF Sub GuiDrawIcon( iconId as Integer, position as Vector2 , pixelSize as integer, color0 as Color)
+RAYGUIDEF Sub GuiDrawIcon( iconId as long, position as Vector2 , pixelSize as long, color0 as Color)
 
-RAYGUIDEF Function GuiGetIcons()  As UInteger ptr                    ' Get full icons data pointegerer
-RAYGUIDEF Function GuiGetIconData( iconId as Integer) As uinteger ptr            ' Get icon bit data
-RAYGUIDEF Sub GuiSetIconData( iconId as Integer, data as uinteger ptr)  ' Set icon bit data
+RAYGUIDEF Function GuiGetIcons()  As ulong ptr                    ' Get full icons data pointegerer
+RAYGUIDEF Function GuiGetIconData( iconId as long) As ulong ptr            ' Get icon bit data
+RAYGUIDEF Sub GuiSetIconData( iconId as long, data as ulong ptr)  ' Set icon bit data
 
-RAYGUIDEF Sub GuiSetIconPixel( iconId as Integer, x as integer, y as Integer)       ' Set icon pixel value
-RAYGUIDEF sub GuiClearIconPixel( iconId as Integer, x as Integer, y as Integer)     ' Clear icon pixel value
-RAYGUIDEF function GuiCheckIconPixel( iconId as Integer, x as Integer, y as Integer) As boolean    ' Check icon pixel value
+RAYGUIDEF Sub GuiSetIconPixel( iconId as long, x as long, y as long)       ' Set icon pixel value
+RAYGUIDEF sub GuiClearIconPixel( iconId as long, x as long, y as long)     ' Clear icon pixel value
+RAYGUIDEF function GuiCheckIconPixel( iconId as long, x as long, y as long) As boolean    ' Check icon pixel value
 #endif
 
 #endif ' RAYGUI_H
@@ -558,10 +550,10 @@ Dim shared  guiLocked As boolean  = false          ' Gui lock state (no inputs p
 Dim shared  guiAlpha As Single  = 1.0f           ' Gui element transpacency on drawing
 
 ' Global gui style array (allocated on data segment by default)
-' NOTE: In raygui we manage a single integer array with all the possible style properties.
+' NOTE: In raygui we manage a single long array with all the possible style properties.
 ' When a new style is loaded, it loads over the global style... but default gui style
 ' could always be recovered with GuiLoadStyleDefault()
-Dim shared  guiStyle(NUM_CONTROLS*(NUM_PROPS_DEFAULT + NUM_PROPS_EXTENDED)) As UInteger =  {0 }
+Dim shared  guiStyle(NUM_CONTROLS*(NUM_PROPS_DEFAULT + NUM_PROPS_EXTENDED)) As ulong =  {0 }
 Dim shared  guiStyleLoaded As boolean = false     ' Style loaded flag for lazy style initialization
 
 ' Tooltips required variables
@@ -588,19 +580,19 @@ Dim Shared  guiTooltipEnabled As boolean = true   ' Gui tooltips enabled
 ' Input required functions
 '---------------------------------------=1-
 declare Function  GetMousePosition() As Vector2
-declare Function  GetMouseWheelMove() As Integer
-declare Function  IsMouseButtonDown(button As Integer)As boolean
-Declare  IsMouseButtonPressed(button As Integer)As boolean
-declare function boolean IsMouseButtonReleased(button As Integer)
+declare Function  GetMouseWheelMove() As long
+declare Function  IsMouseButtonDown(button As long)As boolean
+Declare  IsMouseButtonPressed(button As long)As boolean
+declare function boolean IsMouseButtonReleased(button As long)
 
-declare function  IsKeyDown(key As Integer)As boolean
-declare function  IsKeyPressed(key As Integer)As boolean
-Declare  Function GetCharPressed() As Integer        ' -=1 GuiTextBox(), GuiTextBoxMulti(), GuiValueBox()
+declare function  IsKeyDown(key As long)As boolean
+declare function  IsKeyPressed(key As long)As boolean
+Declare  Function GetCharPressed() As long        ' -=1 GuiTextBox(), GuiTextBoxMulti(), GuiValueBox()
 '---------------------------------------=1-
 
 ' Drawing required functions
 '---------------------------------------=1-
-Declare Sub DrawRectangle(x as Integer, y as Integer, width0 As Integer, height0 As Integer, color0 as Color)        ' -=1 GuiDrawRectangle(), GuiDrawIcon()
+Declare Sub DrawRectangle(x as long, y as long, width0 As long, height0 As long, color0 as Color)        ' -=1 GuiDrawRectangle(), GuiDrawIcon()
 
 Declare Sub DrawRectangleGradientEx(rec as Rectangle, Color col1, Color col2, Color col3, Color col4)     ' -=1 GuiColorPicker()
 Declare Sub DrawTriangle(v1 as Vector2, v2 as Vector2, v3 as Vector2, color0 as Color)                              ' -=1 GuiDropdownBox(), GuiScrollBar()
@@ -615,22 +607,22 @@ declare function GetFontDefault() As Font                          ' -=1 GuiLoad
 declare function MeasureTextEx(font0 as Font, text As Const zstring Ptr, fontSize as single , spacing as Single)  As Vector2                         ' -=1 GetTextWidth(), GuiTextBoxMulti()
 Declare  Sub DrawTextEx(font0 as Font, text As Const zstring Ptr, position as Vector2 , fontSize as Single , spacing as Single, tint as Color)  ' -=1 GuiDrawText()
 
-declare function LoadFontEx( fileName As Const zstring Ptr, fontSize as integer, fontChars as integer ptr, charsCount as integer) As Font ' -=1 GuiLoadStyle()
+declare function LoadFontEx( fileName As Const zstring Ptr, fontSize as long, fontChars as long ptr, charsCount as long) As Font ' -=1 GuiLoadStyle()
 declare function LoadText( fileName As Const zstring Ptr)  As ZString ptr              ' -=1 GuiLoadStyle()
 Declare Function  GetDirectoryPath( filePath As Const zstring Ptr) As Const zstring Ptr static ' -=1 GuiLoadStyle()
 '---------------------------------------=1-
 
 ' raylib functions already implemented in raygui
 '---------------------------------------=1-
-declare function  GetColor(hexValue As Integer)   As Color                ' Returns a Color struct from hexadecimal value
-declare function ColorToInt(color0 as Color)  As Integer                ' Returns hexadecimal value for a Color
+declare function  GetColor(hexValue As long)   As Color                ' Returns a Color struct from hexadecimal value
+declare function ColorToInt(color0 as Color)  As long                ' Returns hexadecimal value for a Color
 declare function  Fade(color0 as Color, alpha0 as Single) As Color       ' Color fade-in or fade-out, alpha goes from 0.0f to 1.0f
 declare function  CheckCollisionPointRec(point0 as Vector2 , rec as Rectangle)  As boolean ' Check if pointeger is inside rectangle
 declare function  textFormat( text0 As Const zstring Ptr, ...)  As Const zstring Ptr              ' Formatting of text with variables to 'embed'
-declare function  textSplit( text0 As Const zstring Ptr, char delimiter, count as integer Ptr) As Const zstring Ptr    ' Split text integero multiple strings
-declare function TextToInteger( text0 As Const zstring Ptr)  As integer       ' Get integereger value from text
+declare function  textSplit( text0 As Const zstring Ptr, char delimiter, count as long Ptr) As Const zstring Ptr    ' Split text integero multiple strings
+declare function TextToInteger( text0 As Const zstring Ptr)  As long       ' Get integereger value from text
 
-Declare  Sub DrawRectangleGradientV(integer posX, integer posY, width0 As Integer, height0 As Integer, color1 as Color, color1 as Color)  ' Draw rectangle vertical gradient
+Declare  Sub DrawRectangleGradientV(long posX, long posY, width0 As long, height0 As long, color1 as Color, color1 as Color)  ' Draw rectangle vertical gradient
 '---------------------------------------=1-
 
 #endif      ' RAYGUI_STANDALONE
@@ -638,19 +630,19 @@ Declare  Sub DrawRectangleGradientV(integer posX, integer posY, width0 As Intege
 '-----------------------------------------=1
 ' Module specific Functions Declaration
 '-----------------------------------------=1
-Declare Function GetTextWidth( text0 As Const zstring Ptr)  As  Integer' Static                   ' Gui get text width using default font
-Declare Function GetTextBounds(control as integer, bounds As Rectangle) As Rectangle' Static' Get text bounds considering control bounds
-Declare Function GetTextIcon( text0 As Const zstring Ptr, iconId as integer ptr) As Const zstring Ptr' Static  ' Get text icon if provided and move text cursor
+Declare Function GetTextWidth( text0 As Const zstring Ptr)  As  long' Static                   ' Gui get text width using default font
+Declare Function GetTextBounds(control as long, bounds As Rectangle) As Rectangle' Static' Get text bounds considering control bounds
+Declare Function GetTextIcon( text0 As Const zstring Ptr, iconId as long ptr) As Const zstring Ptr' Static  ' Get text icon if provided and move text cursor
 
 'static
-Declare Sub GuiDrawText( text As Const zstring Ptr, bounds As Rectangle, alignment as integer, tint as Color)         ' Gui draw text using default font
+Declare Sub GuiDrawText( text As Const zstring Ptr, bounds As Rectangle, alignment as long, tint as Color)         ' Gui draw text using default font
 'static
-Declare Sub GuiDrawRectangle(rec as Rectangle, borderWidth as integer , borderColor as Color , color0 as Color)   ' Gui draw rectangle using default raygui style
+Declare Sub GuiDrawRectangle(rec as Rectangle, borderWidth as long , borderColor as Color , color0 as Color)   ' Gui draw rectangle using default raygui style
 'static
 Declare Sub GuiDrawTooltip(bounds As Rectangle)                   ' Draw tooltip relatively to bounds
 
 'static
-Declare Function GuiTextSplit( text0 As Const zstring Ptr, count as integer ptr, textRow as integer ptr) As Const ubyte Ptr Ptr  ' Split controls text integero multiple strings
+Declare Function GuiTextSplit( text0 As Const zstring Ptr, count as long ptr, textRow as long ptr) As Const ubyte Ptr Ptr  ' Split controls text integero multiple strings
 'static
 Declare Function ConvertHSVtoRGB(hsv as Vector3)   As  Vector3                ' Convert color data from HSV to RGB
 'static
@@ -693,12 +685,12 @@ End Sub
 
 
 ' Set gui state (global state)
-Sub GuiSetState(state As Integer )
+Sub GuiSetState(state As long )
 	guiState = Cast(GuiControlState,state)
 End Sub
 
 ' Get gui state (global state)
-Function GuiGetState() As integer
+Function GuiGetState() As long
 	return guiState
 End function
 ' Set custom gui font
@@ -724,21 +716,21 @@ Function GuiGetFont() As Font
 End function
 
 ' Set control style property value
-Sub GuiSetStyle(control0 as Integer, propertys0 As Integer , value0 as Integer)
+Sub GuiSetStyle(control0 as long, propertys0 As long , value0 as long)
 
 	if (Not(guiStyleLoaded)) Then GuiLoadStyleDefault()
 	guiStyle(control0*(NUM_PROPS_DEFAULT + NUM_PROPS_EXTENDED) + Propertys0) = value0
 
 	' Default properties are propagated to all controls
 	if ((control0 = 0) AndAlso (propertys0 < NUM_PROPS_DEFAULT)) Then
-		for i As UInteger=1 to NUM_CONTROLS-1
+		for i As ulong=1 to NUM_CONTROLS-1
 			guiStyle((i*(NUM_PROPS_DEFAULT + NUM_PROPS_EXTENDED)) + propertys0) = value0
 		Next
 	EndIf
 End Sub
 
 ' Get control style property value
-Function GuiGetStyle(control0 as Integer, propertys0 As integer) As integer
+Function GuiGetStyle(control0 as long, propertys0 As long) As long
 
 	if (Not(guiStyleLoaded)) Then GuiLoadStyleDefault()
 	return guiStyle(control0*((NUM_PROPS_DEFAULT + NUM_PROPS_EXTENDED)) + propertys0)
@@ -778,7 +770,7 @@ Function GuiWindowBox(bounds As Rectangle,  title0 As Const zstring Ptr) As bool
 	Dim As GuiControlState state = guiState
 	Dim As boolean clicked = false
 
-	Dim As Integer statusBarHeight = WINDOW_STATUSBAR_HEIGHT + 2*GuiGetStyle(STATUSBAR, BORDER_WIDTH)
+	Dim As long statusBarHeight = WINDOW_STATUSBAR_HEIGHT + 2*GuiGetStyle(STATUSBAR, BORDER_WIDTH)
 	statusBarHeight += (statusBarHeight Mod 2)
 
 	Dim As Rectangle statusBar0 = Rectangle( bounds.x, bounds.y, bounds.width, statusBarHeight )
@@ -799,8 +791,8 @@ Function GuiWindowBox(bounds As Rectangle,  title0 As Const zstring Ptr) As bool
 	GuiPanel(windowPanel)          ' Draw window base
 
 	' Draw window close button
-	Dim As Integer tempBorderWidth = GuiGetStyle(BUTTON, BORDER_WIDTH)
-	Dim As Integer tempTextAlignment = GuiGetStyle(BUTTON, TEXT_ALIGNMENT)
+	Dim As long tempBorderWidth = GuiGetStyle(BUTTON, BORDER_WIDTH)
+	Dim As long tempTextAlignment = GuiGetStyle(BUTTON, TEXT_ALIGNMENT)
 	GuiSetStyle(BUTTON, BORDER_WIDTH, 1)
 	GuiSetStyle(BUTTON, TEXT_ALIGNMENT, GUI_TEXT_ALIGN_CENTER)
 	#if defined(RAYGUI_SUPPORT_ICONS)
@@ -898,8 +890,8 @@ function GuiScrollPanel(bounds As Rectangle, content as Rectangle, scroll As Vec
 	if (Not hasHorizontalScrollBar) Then hasHorizontalScrollBar = IIf(hasVerticalScrollBar and (content.width > (bounds.width - 2*GuiGetStyle(DEFAULT, BORDER_WIDTH) - GuiGetStyle(LISTVIEW, SCROLLBAR_WIDTH))), true , false)
 	if (Not hasVerticalScrollBar) Then hasVerticalScrollBar = IIf(hasHorizontalScrollBar And (content.height > (bounds.height - 2*GuiGetStyle(DEFAULT, BORDER_WIDTH) - GuiGetStyle(LISTVIEW, SCROLLBAR_WIDTH))), true , false)
 
-	Dim As Const integer horizontalScrollBarWidth = IIf(hasHorizontalScrollBar, GuiGetStyle(LISTVIEW, SCROLLBAR_WIDTH) , 0)
-	Dim As Const integer verticalScrollBarWidth =  IIf(hasVerticalScrollBar, GuiGetStyle(LISTVIEW, SCROLLBAR_WIDTH) , 0)
+	Dim As Const long horizontalScrollBarWidth = IIf(hasHorizontalScrollBar, GuiGetStyle(LISTVIEW, SCROLLBAR_WIDTH) , 0)
+	Dim As Const long verticalScrollBarWidth =  IIf(hasVerticalScrollBar, GuiGetStyle(LISTVIEW, SCROLLBAR_WIDTH) , 0)
 	' Dim As Const Rectangle horizontalScrollBar =  (single)((GuiGetStyle(LISTVIEW, SCROLLBAR_SIDE) == SCROLLBAR_LEFT_SIDE)? (single)bounds.x + verticalScrollBarWidth : (single)bounds.x) + GuiGetStyle(DEFAULT, BORDER_WIDTH), (single)bounds.y + bounds.height - horizontalScrollBarWidth - GuiGetStyle(DEFAULT, BORDER_WIDTH), (single)bounds.width - verticalScrollBarWidth - 2*GuiGetStyle(DEFAULT, BORDER_WIDTH), (single)horizontalScrollBarWidth }
 	' Dim As Const Rectangle verticalScrollBar =  (single)((GuiGetStyle(LISTVIEW, SCROLLBAR_SIDE) == SCROLLBAR_LEFT_SIDE)? (single)bounds.x + GuiGetStyle(DEFAULT, BORDER_WIDTH) : (single)bounds.x + bounds.width - verticalScrollBarWidth - GuiGetStyle(DEFAULT, BORDER_WIDTH)), (single)bounds.y + GuiGetStyle(DEFAULT, BORDER_WIDTH), (single)verticalScrollBarWidth, (single)bounds.height - horizontalScrollBarWidth - 2*GuiGetStyle(DEFAULT, BORDER_WIDTH) }
 	Dim As Const Rectangle horizontalScrollBar =  Rectangle(IIf((GuiGetStyle(LISTVIEW, SCROLLBAR_SIDE) = SCROLLBAR_LEFT_SIDE), bounds.x + verticalScrollBarWidth , bounds.x) + _
@@ -923,10 +915,10 @@ function GuiScrollPanel(bounds As Rectangle, content as Rectangle, scroll As Vec
 	if (view0.height > content.height) Then view0.height = content.height
 
 	' TODO: Review!
-	Dim As Const integer horizontalMin = IIf(hasHorizontalScrollBar, iif(GuiGetStyle(LISTVIEW, SCROLLBAR_SIDE) = SCROLLBAR_LEFT_SIDE, -verticalScrollBarWidth , 0) - GuiGetStyle(DEFAULT, BORDER_WIDTH) , iif(GuiGetStyle(LISTVIEW, SCROLLBAR_SIDE) = SCROLLBAR_LEFT_SIDE, -verticalScrollBarWidth , 0) - GuiGetStyle(DEFAULT, BORDER_WIDTH))
-	Dim As Const integer horizontalMax = IIf(hasHorizontalScrollBar, content.width - bounds.width + verticalScrollBarWidth + GuiGetStyle(DEFAULT, BORDER_WIDTH) - iif(GuiGetStyle(LISTVIEW, SCROLLBAR_SIDE) = SCROLLBAR_LEFT_SIDE, verticalScrollBarWidth , 0) , -GuiGetStyle(DEFAULT, BORDER_WIDTH))
-	Dim As Const integer verticalMin = IIf(hasVerticalScrollBar, -GuiGetStyle(DEFAULT, BORDER_WIDTH) , -GuiGetStyle(DEFAULT, BORDER_WIDTH))
-	Dim As Const integer verticalMax = IIf(hasVerticalScrollBar, content.height - bounds.height + horizontalScrollBarWidth + GuiGetStyle(DEFAULT, BORDER_WIDTH) , -GuiGetStyle(DEFAULT, BORDER_WIDTH))
+	Dim As Const long horizontalMin = IIf(hasHorizontalScrollBar, iif(GuiGetStyle(LISTVIEW, SCROLLBAR_SIDE) = SCROLLBAR_LEFT_SIDE, -verticalScrollBarWidth , 0) - GuiGetStyle(DEFAULT, BORDER_WIDTH) , iif(GuiGetStyle(LISTVIEW, SCROLLBAR_SIDE) = SCROLLBAR_LEFT_SIDE, -verticalScrollBarWidth , 0) - GuiGetStyle(DEFAULT, BORDER_WIDTH))
+	Dim As Const long horizontalMax = IIf(hasHorizontalScrollBar, content.width - bounds.width + verticalScrollBarWidth + GuiGetStyle(DEFAULT, BORDER_WIDTH) - iif(GuiGetStyle(LISTVIEW, SCROLLBAR_SIDE) = SCROLLBAR_LEFT_SIDE, verticalScrollBarWidth , 0) , -GuiGetStyle(DEFAULT, BORDER_WIDTH))
+	Dim As Const long verticalMin = IIf(hasVerticalScrollBar, -GuiGetStyle(DEFAULT, BORDER_WIDTH) , -GuiGetStyle(DEFAULT, BORDER_WIDTH))
+	Dim As Const long verticalMax = IIf(hasVerticalScrollBar, content.height - bounds.height + horizontalScrollBarWidth + GuiGetStyle(DEFAULT, BORDER_WIDTH) , -GuiGetStyle(DEFAULT, BORDER_WIDTH))
 
 	' Update control
 	'----------------------------------
@@ -954,7 +946,7 @@ function GuiScrollPanel(bounds As Rectangle, content as Rectangle, scroll As Vec
 				if (IsKeyDown(KEY_UP)) Then scrollPos.y += GuiGetStyle(SCROLLBAR, SCROLL_SPEED)
 			EndIf
 
-			Dim As Integer wheelMove = GetMouseWheelMove()
+			Dim As long wheelMove = GetMouseWheelMove()
 
 			' Horizontal scroll (Shift + Mouse wheel)
 			if (hasHorizontalScrollBar andalso (IsKeyDown(KEY_LEFT_SHIFT) orelse IsKeyDown(KEY_RIGHT_SHIFT))) Then
@@ -977,7 +969,7 @@ function GuiScrollPanel(bounds As Rectangle, content as Rectangle, scroll As Vec
 	GuiDrawRectangle(bounds, 0, BLANK, GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)))        ' Draw background
 
 	' Save size of the scrollbar slider
-	Dim As Const integer slider = GuiGetStyle(SCROLLBAR, SCROLL_SLIDER_SIZE)
+	Dim As Const long slider = GuiGetStyle(SCROLLBAR, SCROLL_SLIDER_SIZE)
 
 	' Draw horizontal scrollbar if visible
 	if (hasHorizontalScrollBar) Then
@@ -1073,7 +1065,7 @@ Function GuiLabelButton(bounds As Rectangle, text0 As Const zstring Ptr) As bool
 	Dim As boolean pressed = false
 
 	' NOTE: We force bounds.width to be all text
-	Dim As Integer textWidth = MeasureTextEx(guiFont, text0, GuiGetStyle(DEFAULT, TEXT_SIZE), GuiGetStyle(DEFAULT, TEXT_SPACING)).x
+	Dim As long textWidth = MeasureTextEx(guiFont, text0, GuiGetStyle(DEFAULT, TEXT_SIZE), GuiGetStyle(DEFAULT, TEXT_SPACING)).x
 	if (bounds.width < textWidth) Then bounds.width = textWidth
 
 	' Update control
@@ -1189,7 +1181,7 @@ Function GuiToggle(bounds As Rectangle, text0 As Const zstring Ptr, active as bo
 End function
 
 ' Toggle Group control, returns toggled button index
-Function GuiToggleGroup(bounds As Rectangle, text As Const zstring Ptr, active as Integer) As Integer
+Function GuiToggleGroup(bounds As Rectangle, text As Const zstring Ptr, active as long) As long
 
 	#if  Not Defined(TOGGLEGROUP_MAX_ELEMENTS)
 	#define TOGGLEGROUP_MAX_ELEMENTS    32
@@ -1198,13 +1190,13 @@ Function GuiToggleGroup(bounds As Rectangle, text As Const zstring Ptr, active a
 	Dim As Single initBoundsX = bounds.x
 
 	' Get substrings items from text (items pointegerers)
-	Dim As Integer rows(TOGGLEGROUP_MAX_ELEMENTS)' =  (0 )
-	Dim As Integer itemsCount = 0
+	Dim As long rows(TOGGLEGROUP_MAX_ELEMENTS)' =  (0 )
+	Dim As long itemsCount = 0
 	Dim As Const zstring Ptr Ptr items = GuiTextSplit(text, @itemsCount, @rows(0))
 
-	Dim As Integer prevRow = rows(0)
+	Dim As long prevRow = rows(0)
 
-	for i As Integer=0 To itemsCount-1'(integer i = 0 i < itemsCount i+=1)
+	for i As long=0 To itemsCount-1'(long i = 0 i < itemsCount i+=1)
 
 		if (prevRow <> rows(i)) Then
 
@@ -1286,7 +1278,7 @@ Function GuiCheckBox(bounds As Rectangle, text0 As Const zstring Ptr,checked as 
 End Function
 
 ' Combo Box control, returns selected item index
-Function GuiComboBox(bounds As Rectangle, text0 As Const zstring Ptr, active as Integer) As Integer
+Function GuiComboBox(bounds As Rectangle, text0 As Const zstring Ptr, active as long) As long
 
 	Dim As GuiControlState state = guiState
 
@@ -1296,7 +1288,7 @@ Function GuiComboBox(bounds As Rectangle, text0 As Const zstring Ptr, active as 
 	bounds.y, GuiGetStyle(COMBOBOX, COMBO_BUTTON_WIDTH), bounds.height )
 
 	' Get substrings items from text (items pointegerers, lengths and count)
-	Dim As Integer itemsCount = 0
+	Dim As long itemsCount = 0
 	dim As Const zstring Ptr Ptr items = GuiTextSplit(text0, @itemsCount, NULL)
 
 	if (active < 0) Then
@@ -1337,12 +1329,12 @@ Function GuiComboBox(bounds As Rectangle, text0 As Const zstring Ptr, active as 
 
 	' Draw selector using a custom button
 	' NOTE: BORDER_WIDTH and TEXT_ALIGNMENT forced values
-	Dim As Integer tempBorderWidth = GuiGetStyle(BUTTON, BORDER_WIDTH)
-	Dim As Integer tempTextAlign = GuiGetStyle(BUTTON, TEXT_ALIGNMENT)
+	Dim As long tempBorderWidth = GuiGetStyle(BUTTON, BORDER_WIDTH)
+	Dim As long tempTextAlign = GuiGetStyle(BUTTON, TEXT_ALIGNMENT)
 	GuiSetStyle(BUTTON, BORDER_WIDTH, 1)
 	GuiSetStyle(BUTTON, TEXT_ALIGNMENT, GUI_TEXT_ALIGN_CENTER)
 
-	GuiButton(selector, TextFormat(" mod i/ mod i", active + 1, itemsCount))
+	GuiButton(selector, TextFormat(!"%i/%i", active + 1, itemsCount))
 
 	GuiSetStyle(BUTTON, TEXT_ALIGNMENT, tempTextAlign)
 	GuiSetStyle(BUTTON, BORDER_WIDTH, tempBorderWidth)
@@ -1353,14 +1345,14 @@ End Function
 
 ' Dropdown Box control
 ' NOTE: Returns mouse click
-Function GuiDropdownBox(bounds As Rectangle, text0 As Const zstring Ptr, active0 as Integer ptr, editMode as boolean) As boolean
+Function GuiDropdownBox(bounds As Rectangle, text0 As Const zstring Ptr, active0 as long ptr, editMode as boolean) As boolean
 
 	Dim As GuiControlState state = guiState
-	Dim As Integer itemSelected = *active0
-	Dim As Integer itemFocused = -1
+	Dim As long itemSelected = *active0
+	Dim As long itemFocused = -1
 
 	' Get substrings items from text (items pointegerers, lengths and count)
-	Dim As Integer itemsCount = 0
+	Dim As long itemsCount = 0
 	Dim As Const ZString Ptr Ptr items = GuiTextSplit(text0, @itemsCount, NULL)
 
 	Dim As Rectangle boundsOpen = bounds
@@ -1390,7 +1382,7 @@ Function GuiDropdownBox(bounds As Rectangle, text0 As Const zstring Ptr, active0
 			if (CheckCollisionPointRec(mousePointeger, bounds) AndAlso IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) Then pressed = true
 
 			' Check focused and selected item
-			for i As Integer=0 To itemsCount-1
+			for i As long=0 To itemsCount-1
 
 				' Update item rectangle y position for next item
 				itemBounds.y += (bounds.height + GuiGetStyle(DROPDOWNBOX, DROPDOWN_ITEMS_PADDING))
@@ -1435,7 +1427,7 @@ Function GuiDropdownBox(bounds As Rectangle, text0 As Const zstring Ptr, active0
 	if (editMode) Then
 
 		' Draw visible items
-		for i As Integer=0 To itemsCount-1
+		for i As long=0 To itemsCount-1
 
 			' Update item rectangle y position for next item
 			itemBounds.y += (bounds.height + GuiGetStyle(DROPDOWNBOX, DROPDOWN_ITEMS_PADDING))
@@ -1473,46 +1465,40 @@ End function
 ' Text Box control, updates input text
 ' NOTE 1: Requires static variables: framesCounter
 ' NOTE 2: Returns if KEY_ENTER pressed (useful for data validation)
-Function GuiTextBox(bounds As Rectangle, text0 as zstring Ptr, textSize as Integer, editMode as boolean) As boolean
+Function GuiTextBox(bounds As Rectangle, text0 as zstring Ptr, textSize as long, editMode as boolean) As boolean
 
-	Static As Integer framesCounter = 0           ' Required for blinking cursor
+	Static As long framesCounter = 0           ' Required for blinking cursor
 
 	Dim As GuiControlState state = guiState
 	Dim As boolean pressed = false
 
 	Dim As Rectangle cursor = Rectangle( _
-	bounds.x + GuiGetStyle(TEXTBOX, TEXT_PADDING) + GetTextWidth(text0) + 2, _
-	bounds.y + bounds.height/2 - GuiGetStyle(DEFAULT, TEXT_SIZE), _
-	1, _
-	GuiGetStyle(DEFAULT, TEXT_SIZE)*2 _
-	)
+  	bounds.x + GuiGetStyle(TEXTBOX, TEXT_PADDING) + GetTextWidth(text0) + 2, _
+  	bounds.y + bounds.height/2 - GuiGetStyle(DEFAULT, TEXT_SIZE), _
+  	1, _
+  	GuiGetStyle(DEFAULT, TEXT_SIZE)*2 )
 
 	' Update control
 	'----------------------------------
 	if ((state <> GUI_STATE_DISABLED) andalso not guiLocked) Then
-
 		Dim As Vector2 mousePointeger = GetMousePosition()
 
 		if (editMode) Then
-
 			state = GUI_STATE_PRESSED
 			framesCounter+=1
 
-			Dim As Integer key = Asc(InKey)'GetCharPressed()      ' Returns codepointeger as Unicode
-			Dim As Integer keyCount = strlen(text0)
+			Dim As long key = GetCharPressed()      ' Returns codepointeger as Unicode
+			Dim As long keyCount = len( *text0 )'strlen(text0)
 
 			' Only allow keys in range [32..125]
 			if (keyCount < (textSize - 1)) Then
-
-				Dim As Integer maxWidth = (bounds.width - (GuiGetStyle(TEXTBOX, TEXT_INNER_PADDING)*2))
+				Dim As long maxWidth = (bounds.width - (GuiGetStyle(TEXTBOX, TEXT_INNER_PADDING)*2))
 
 				if ((GetTextWidth(text0) < (maxWidth - GuiGetStyle(DEFAULT, TEXT_SIZE))) AndAlso (key >= 32)) Then
-
 					Dim As long byteLength = 0
 					Dim As Const zstring Ptr textUtf8 = CodepointToUtf8(key, @byteLength)
 
-					for i As Integer=0 To byteLength-1
-
+					for i As long=0 To byteLength-1
 						text0[keyCount] = textUtf8[i]
 						keyCount+=1
 					Next
@@ -1523,7 +1509,6 @@ Function GuiTextBox(bounds As Rectangle, text0 as zstring Ptr, textSize as Integ
 
 			' Delete text
 			if (keyCount > 0) Then
-
 				if (IsKeyPressed(KEY_BACKSPACE)) Then
 
 					keyCount-=1
@@ -1532,7 +1517,6 @@ Function GuiTextBox(bounds As Rectangle, text0 as zstring Ptr, textSize as Integ
 					if (keyCount < 0) Then keyCount = 0
 
 				elseif (IsKeyDown(KEY_BACKSPACE)) Then
-
 					if ((framesCounter > TEXTEDIT_CURSOR_BLINK_FRAMES) AndAlso (framesCounter mod 2) = 0) Then keyCount-=1
 					text0[keyCount] = 0'!"\0"
 					if (keyCount < 0) Then keyCount = 0
@@ -1542,17 +1526,14 @@ Function GuiTextBox(bounds As Rectangle, text0 as zstring Ptr, textSize as Integ
 			if (IsKeyPressed(KEY_ENTER) OrElse (Not CheckCollisionPointRec(mousePointeger, bounds) AndAlso IsMouseButtonPressed(MOUSE_LEFT_BUTTON))) Then pressed = true
 
 			' Check text alignment to position cursor properly
-			Dim As Integer textAlignment = GuiGetStyle(TEXTBOX, TEXT_ALIGNMENT)
+			Dim As long textAlignment = GuiGetStyle(TEXTBOX, TEXT_ALIGNMENT)
 			if (textAlignment = GUI_TEXT_ALIGN_CENTER) then
 				cursor.x = bounds.x + GetTextWidth(text0)/2 + bounds.width/2 + 1
 			elseif (textAlignment = GUI_TEXT_ALIGN_RIGHT) Then
 				cursor.x = bounds.x + bounds.width - GuiGetStyle(TEXTBOX, TEXT_INNER_PADDING)
 			EndIf
-
 		else
-
 			if (CheckCollisionPointRec(mousePointeger, bounds)) Then
-
 				state = GUI_STATE_FOCUSED
 				if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) Then pressed = true
 			EndIf
@@ -1585,16 +1566,18 @@ Function GuiTextBox(bounds As Rectangle, text0 as zstring Ptr, textSize as Integ
 End function
 
 ' Spinner control, returns selected value
-Function GuiSpinner(bounds As Rectangle, text0 As Const zstring Ptr, value as integer Ptr, minValue as Integer, maxValue as Integer, editMode as boolean) As boolean
+Function GuiSpinner(bounds As Rectangle, text0 As Const zstring Ptr, value as long Ptr, minValue as long, maxValue as long, editMode as boolean) As boolean
 
 	Dim As GuiControlState state = guiState
 
 	Dim As boolean pressed = false
-	Dim As Integer tempValue = *value
+	Dim As long tempValue = *value
 
 	Dim As Rectangle spinner0 =  Rectangle(bounds.x + GuiGetStyle(SPINNER, SPIN_BUTTON_WIDTH) + GuiGetStyle(SPINNER, SPIN_BUTTON_PADDING), bounds.y, _
 	bounds.width - 2*(GuiGetStyle(SPINNER, SPIN_BUTTON_WIDTH) + GuiGetStyle(SPINNER, SPIN_BUTTON_PADDING)), bounds.height )
 	Dim As Rectangle leftButtonBound =  Rectangle(bounds.x, bounds.y, GuiGetStyle(SPINNER, SPIN_BUTTON_WIDTH), bounds.height )
+	'Dim As Rectangle rightButtonBound =  Rectangle(bounds.x + bounds.width - GuiGetStyle(SPINNER, SPIN_BUTTON_WIDTH), bounds.y, GuiGetStyle(SPINNER, SPIN_BUTTON_WIDTH), bounds.height )
+	'hack
 	Dim As Rectangle rightButtonBound =  Rectangle(bounds.x + bounds.width - GuiGetStyle(SPINNER, SPIN_BUTTON_WIDTH), bounds.y, GuiGetStyle(SPINNER, SPIN_BUTTON_WIDTH), bounds.height )
 
 	Dim As Rectangle textBounds
@@ -1639,14 +1622,20 @@ Function GuiSpinner(bounds As Rectangle, text0 As Const zstring Ptr, value as in
 
 	' Draw value selector custom buttons
 	' NOTE: BORDER_WIDTH and TEXT_ALIGNMENT forced values
-	Dim As Integer tempBorderWidth = GuiGetStyle(BUTTON, BORDER_WIDTH)
-	Dim As Integer tempTextAlign = GuiGetStyle(BUTTON, TEXT_ALIGNMENT)
+	Dim As long tempBorderWidth = GuiGetStyle(BUTTON, BORDER_WIDTH)
+	Dim As long tempTextAlign = GuiGetStyle(BUTTON, TEXT_ALIGNMENT)
 	GuiSetStyle(BUTTON, BORDER_WIDTH, GuiGetStyle(SPINNER, BORDER_WIDTH))
 	GuiSetStyle(BUTTON, TEXT_ALIGNMENT, GUI_TEXT_ALIGN_CENTER)
 
 	#if defined(RAYGUI_SUPPORT_ICONS)
+	'hack
+	GuiSetStyle(BUTTON, TEXT_ALIGNMENT, GUI_TEXT_ALIGN_LEFT)
 	if (GuiButton(leftButtonBound, GuiIconText(RICON_ARROW_LEFT_FILL, NULL))) Then tempValue-=1
+	'hack
+	GuiSetStyle(BUTTON, TEXT_ALIGNMENT, GUI_TEXT_ALIGN_LEFT)
 	if (GuiButton(rightButtonBound, GuiIconText(RICON_ARROW_RIGHT_FILL, NULL))) Then tempValue+=1
+	'hack
+	GuiSetStyle(BUTTON, TEXT_ALIGNMENT, GUI_TEXT_ALIGN_CENTER)
 	#else
 	if (GuiButton(leftButtonBound, @"<")) Then tempValue-=1
 	if (GuiButton(rightButtonBound, @">")) Then tempValue+=1
@@ -1665,23 +1654,153 @@ End function
 
 ' Value Box control, updates input text with numbers
 ' NOTE: Requires static variables: framesCounter
-Function GuiValueBox(bounds As Rectangle, text0 As Const zstring Ptr, value as integer Ptr, minValue as Integer, maxValue as Integer, editMode as boolean) As boolean
+'Function GuiValueBox(bounds As Rectangle, text0 As Const zstring Ptr, value as long Ptr, minValue as long, maxValue as long, editMode as boolean) As boolean
+'
+'	#if Not Defined(VALUEBOX_MAX_CHARS)
+'	#define VALUEBOX_MAX_CHARS  32
+'	#endif
+'
+'	static As long framesCounter = 0           ' Required for blinking cursor
+'
+'	Dim As GuiControlState state = guiState
+'	Dim As boolean pressed = false
+'
+'	'Dim As Byte textValue(VALUEBOX_MAX_CHARS + 1) '= 0'"\0"
+'	'hack
+'	Dim As ZString*(VALUEBOX_MAX_CHARS + 1) textValue '= 0'"\0"
+'	sprintf(@textValue, "%i", *value)
+'
+'	Dim As Rectangle textBounds
+'	
+'	if (text0 <> NULL) Then
+'		textBounds.width = GetTextWidth(text0)
+'		textBounds.height = GuiGetStyle(DEFAULT, TEXT_SIZE)
+'		textBounds.x = bounds.x + bounds.width + GuiGetStyle(VALUEBOX, TEXT_PADDING)
+'		textBounds.y = bounds.y + bounds.height/2 - GuiGetStyle(DEFAULT, TEXT_SIZE)/2
+'		if (GuiGetStyle(VALUEBOX, TEXT_ALIGNMENT) = GUI_TEXT_ALIGN_LEFT) Then textBounds.x = bounds.x - textBounds.width - GuiGetStyle(VALUEBOX, TEXT_PADDING)
+'	EndIf
+'
+'	' Update control
+'	'----------------------------------
+'	if ((state <> GUI_STATE_DISABLED) andalso not guiLocked) Then
+'		Dim As Vector2 mousePointeger = GetMousePosition()
+'
+'		Dim As boolean valueHasChanged = false
+'
+'		if (editMode) Then
+'			state = GUI_STATE_PRESSED
+'
+'			framesCounter+=1
+'
+'			Dim As long keyCount = strlen(textValue)
+'
+'			' Only allow keys in range [48..57]
+'			if (keyCount < VALUEBOX_MAX_CHARS) Then
+'
+'				Dim As long maxWidth = bounds.width
+'				if (GetTextWidth(textValue) < maxWidth) Then
+'
+'					Dim As long key = GetCharPressed()
+'					if ((key >= 48) AndAlso (key <= 57)) Then
+'
+'						textValue[keyCount] = key
+'						keyCount+=1
+'						valueHasChanged = true
+'					EndIf
+'				EndIf
+'			endif
+'
+'			' Delete text
+'			if (keyCount > 0) Then
+'
+'				if (IsKeyPressed(KEY_BACKSPACE)) Then
+'					keyCount-=1
+'					if (keyCount < 0) Then keyCount = 0
+'					textValue[keyCount] = 0''\0'
+'					framesCounter = 0
+'					valueHasChanged = true
+'
+'				elseif (IsKeyDown(KEY_BACKSPACE)) Then
+'					if ((framesCounter > TEXTEDIT_CURSOR_BLINK_FRAMES) AndAlso (framesCounter mod 2) = 0) Then keyCount-=1
+'					if (keyCount < 0) Then keyCount = 0
+'					textValue[keyCount] = 0'asc(!"\0")
+'					valueHasChanged = true
+'				EndIf
+'			EndIf
+'
+'			'if (valueHasChanged) Then *value = TextToInteger(@textValue[0])
+'			'hack
+'			if (valueHasChanged) Then
+'				*value = TextToInteger(@textValue[0])
+'				if (*value > maxValue) Then
+'					*value = maxValue
+'				ElseIf (*value < minValue) Then
+'					*value = minValue
+'				EndIf
+'			EndIf
+'
+'			if (IsKeyPressed(KEY_ENTER) OrElse ( Not CheckCollisionPointRec(mousePointeger, bounds) AndAlso IsMouseButtonPressed(MOUSE_LEFT_BUTTON))) Then pressed = true
+'		else
+'			if (*value > maxValue) Then
+'				*value = maxValue
+'			elseif (*value < minValue) Then
+'				*value = minValue
+'			EndIf
+'			
+'			if (CheckCollisionPointRec(mousePointeger, bounds)) Then
+'
+'				state = GUI_STATE_FOCUSED
+'				if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) Then pressed = true
+'			EndIf
+'		EndIf
+'
+'		if (pressed) Then framesCounter = 0
+'	endif
+'	'----------------------------------
+'
+'	' Draw control
+'	'----------------------------------
+'	Dim As Color baseColor = BLANK
+'	if (state = GUI_STATE_PRESSED) Then
+'		baseColor = GetColor(GuiGetStyle(VALUEBOX, BASE_COLOR_PRESSED))
+'	ElseIf (state = GUI_STATE_DISABLED) Then
+'		baseColor = GetColor(GuiGetStyle(VALUEBOX, BASE_COLOR_DISABLED))
+'	EndIf
+'	' WARNING: BLANK color does not work properly with Fade()
+'	GuiDrawRectangle(bounds, GuiGetStyle(VALUEBOX, BORDER_WIDTH), Fade(GetColor(GuiGetStyle(VALUEBOX, BORDER + (state*3))), guiAlpha), baseColor)
+'	GuiDrawText(textValue, GetTextBounds(VALUEBOX, bounds), GUI_TEXT_ALIGN_CENTER, Fade(GetColor(GuiGetStyle(VALUEBOX, TEXT + (state*3))), guiAlpha))
+'
+'	' Draw blinking cursor
+'	if ((state = GUI_STATE_PRESSED) andalso (editMode AndAlso ((framesCounter/20) mod 2 = 0))) Then
+'
+'		' NOTE: ValueBox integerernal text is always centered
+'		Dim As Rectangle cursor =  Rectangle(bounds.x + GetTextWidth(textValue)/2 + bounds.width/2 + 2, bounds.y + 2*GuiGetStyle(VALUEBOX, BORDER_WIDTH), 1, bounds.height - 4*GuiGetStyle(VALUEBOX, BORDER_WIDTH) )
+'		GuiDrawRectangle(cursor, 0, BLANK, Fade(GetColor(GuiGetStyle(VALUEBOX, BORDER_COLOR_PRESSED)), guiAlpha))
+'	EndIf
+'
+'	' Draw text label if provided
+'	if (text0 <> NULL) Then GuiDrawText(text0, textBounds, iif(GuiGetStyle(VALUEBOX, TEXT_ALIGNMENT) = GUI_TEXT_ALIGN_RIGHT, GUI_TEXT_ALIGN_LEFT , GUI_TEXT_ALIGN_RIGHT), Fade(GetColor(GuiGetStyle(LABEL, TEXT + (state*3))), guiAlpha))
+'	'----------------------------------
+'
+'	return pressed
+'End function
 
+Function GuiValueBox(bounds As Rectangle, text0 As Const zstring Ptr, value as long Ptr, minValue as long, maxValue as long, editMode as boolean) As boolean
 	#if Not Defined(VALUEBOX_MAX_CHARS)
-	#define VALUEBOX_MAX_CHARS  32
+	  #define VALUEBOX_MAX_CHARS  32
 	#endif
-
-	static As Integer framesCounter = 0           ' Required for blinking cursor
-
+  
+	static As long framesCounter = 0           ' Required for blinking cursor
+  
 	Dim As GuiControlState state = guiState
 	Dim As boolean pressed = false
 
-	Dim As Byte textValue(VALUEBOX_MAX_CHARS + 1) '= 0'"\0"
-	sprintf(@textValue(0), " %i", *value)
-
+	Dim As string textValue
+	textValue = str( *value )
+  
 	Dim As Rectangle textBounds
+	
 	if (text0 <> NULL) Then
-
 		textBounds.width = GetTextWidth(text0)
 		textBounds.height = GuiGetStyle(DEFAULT, TEXT_SIZE)
 		textBounds.x = bounds.x + bounds.width + GuiGetStyle(VALUEBOX, TEXT_PADDING)
@@ -1692,29 +1811,24 @@ Function GuiValueBox(bounds As Rectangle, text0 As Const zstring Ptr, value as i
 	' Update control
 	'----------------------------------
 	if ((state <> GUI_STATE_DISABLED) andalso not guiLocked) Then
-
 		Dim As Vector2 mousePointeger = GetMousePosition()
 
 		Dim As boolean valueHasChanged = false
 
 		if (editMode) Then
-
 			state = GUI_STATE_PRESSED
 
 			framesCounter+=1
 
-			Dim As Integer keyCount = strlen(@textValue(0))
+			Dim As long keyCount = len(textValue)
 
 			' Only allow keys in range [48..57]
 			if (keyCount < VALUEBOX_MAX_CHARS) Then
-
-				Dim As Integer maxWidth = bounds.width
-				if (GetTextWidth(@textValue(0)) < maxWidth) Then
-
-					Dim As Integer key = Asc(inkey)'GetCharPressed()
+				Dim As long maxWidth = bounds.width
+				if (GetTextWidth(textValue) < maxWidth) Then
+					Dim As long key = GetCharPressed()
 					if ((key >= 48) AndAlso (key <= 57)) Then
-
-						textValue(keyCount) = key
+						textValue += chr( key )
 						keyCount+=1
 						valueHasChanged = true
 					EndIf
@@ -1723,43 +1837,43 @@ Function GuiValueBox(bounds As Rectangle, text0 As Const zstring Ptr, value as i
 
 			' Delete text
 			if (keyCount > 0) Then
-
 				if (IsKeyPressed(KEY_BACKSPACE)) Then
-
 					keyCount-=1
-					textValue(keyCount) = 0''\0'
+					if (keyCount < 0) Then keyCount = 0
+					textValue = left( textValue, keyCount )
 					framesCounter = 0
-					if (keyCount < 0) Then keyCount = 0
 					valueHasChanged = true
-
 				elseif (IsKeyDown(KEY_BACKSPACE)) Then
-
 					if ((framesCounter > TEXTEDIT_CURSOR_BLINK_FRAMES) AndAlso (framesCounter mod 2) = 0) Then keyCount-=1
-					textValue(keyCount) = 0'asc(!"\0")
 					if (keyCount < 0) Then keyCount = 0
+					textValue = left( textValue, keyCount )
 					valueHasChanged = true
 				EndIf
 			EndIf
-
-			if (valueHasChanged) Then *value = TextToInteger(@textValue(0))
-
-			if (IsKeyPressed(KEY_ENTER) OrElse ( Not CheckCollisionPointRec(mousePointeger, bounds) AndAlso IsMouseButtonPressed(MOUSE_LEFT_BUTTON))) Then pressed = true
-
-		else
-
-			if (*value > maxValue) Then
+      
+			if (valueHasChanged) Then
+				*value = clng( val( textValue ) )
+				if (*value > maxValue) Then
+					*value = maxValue
+				ElseIf (*value < minValue) Then
+					*value = minValue
+				EndIf
+			EndIf
+      
+			if (IsKeyPressed(KEY_ENTER) OrElse ( Not CheckCollisionPointRec(mousePointeger, bounds) AndAlso IsMouseButtonPressed(MOUSE_LEFT_BUTTON))) Then
+			  pressed = true
+		  elseif (*value > maxValue) Then
 				*value = maxValue
-
 			elseif (*value < minValue) Then
 				*value = minValue
 			EndIf
+			
 			if (CheckCollisionPointRec(mousePointeger, bounds)) Then
-
 				state = GUI_STATE_FOCUSED
 				if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) Then pressed = true
 			EndIf
 		EndIf
-
+    
 		if (pressed) Then framesCounter = 0
 	endif
 	'----------------------------------
@@ -1774,13 +1888,13 @@ Function GuiValueBox(bounds As Rectangle, text0 As Const zstring Ptr, value as i
 	EndIf
 	' WARNING: BLANK color does not work properly with Fade()
 	GuiDrawRectangle(bounds, GuiGetStyle(VALUEBOX, BORDER_WIDTH), Fade(GetColor(GuiGetStyle(VALUEBOX, BORDER + (state*3))), guiAlpha), baseColor)
-	GuiDrawText(@textValue(0), GetTextBounds(VALUEBOX, bounds), GUI_TEXT_ALIGN_CENTER, Fade(GetColor(GuiGetStyle(VALUEBOX, TEXT + (state*3))), guiAlpha))
+	GuiDrawText(textValue, GetTextBounds(VALUEBOX, bounds), GUI_TEXT_ALIGN_CENTER, Fade(GetColor(GuiGetStyle(VALUEBOX, TEXT + (state*3))), guiAlpha))
 
 	' Draw blinking cursor
 	if ((state = GUI_STATE_PRESSED) andalso (editMode AndAlso ((framesCounter/20) mod 2 = 0))) Then
 
 		' NOTE: ValueBox integerernal text is always centered
-		Dim As Rectangle cursor =  Rectangle(bounds.x + GetTextWidth(@textValue(0))/2 + bounds.width/2 + 2, bounds.y + 2*GuiGetStyle(VALUEBOX, BORDER_WIDTH), 1, bounds.height - 4*GuiGetStyle(VALUEBOX, BORDER_WIDTH) )
+		Dim As Rectangle cursor =  Rectangle(bounds.x + GetTextWidth(textValue)/2 + bounds.width/2 + 2, bounds.y + 2*GuiGetStyle(VALUEBOX, BORDER_WIDTH), 1, bounds.height - 4*GuiGetStyle(VALUEBOX, BORDER_WIDTH) )
 		GuiDrawRectangle(cursor, 0, BLANK, Fade(GetColor(GuiGetStyle(VALUEBOX, BORDER_COLOR_PRESSED)), guiAlpha))
 	EndIf
 
@@ -1792,157 +1906,141 @@ Function GuiValueBox(bounds As Rectangle, text0 As Const zstring Ptr, value as i
 End function
 
 ' Text Box control with multiple lines
-Function GuiTextBoxMulti(bounds As Rectangle, text0 as zstring Ptr, textSize as Integer, editMode as boolean) As boolean
-
-	static As Integer framesCounter = 0           ' Required for blinking cursor
-
-	Dim As GuiControlState state = guiState
-	Dim As boolean pressed = false
-
-	Dim As Rectangle textAreaBounds = Rectangle( _
-	bounds.x + GuiGetStyle(TEXTBOX, TEXT_INNER_PADDING), _
-	bounds.y + GuiGetStyle(TEXTBOX, TEXT_INNER_PADDING), _
-	bounds.width - 2*GuiGetStyle(TEXTBOX, TEXT_INNER_PADDING), _
-	bounds.height - 2*GuiGetStyle(TEXTBOX, TEXT_INNER_PADDING) _
-	)
-
-	' Cursor position, [x, y] values should be updated
-	Dim As Rectangle cursor = Rectangle ( 0, 0, 1, GuiGetStyle(DEFAULT, TEXT_SIZE) + 2 )
-
-	Dim As Integer textWidth = 0
-	Dim As Integer currentLine = 0
-
-	' Update control
-	'----------------------------------
-	if ((state <> GUI_STATE_DISABLED) andalso not guiLocked) Then
-
-		Dim As Vector2 mousePointeger = GetMousePosition()
-
-		if (editMode) Then
-
-			state = GUI_STATE_PRESSED
-			framesCounter+=1
-
-			Dim As Integer character = Asc(inkey)'GetCharPressed()
-			Dim As Integer keyCount = strlen(text0)
-
-			' Introduce characters
-			if (keyCount < (textSize - 1)) Then
-
-				Dim As Vector2 textSize = MeasureTextEx(guiFont, text0, GuiGetStyle(DEFAULT, TEXT_SIZE), GuiGetStyle(DEFAULT, TEXT_SPACING))
-
-				if (textSize.y < (textAreaBounds.height - GuiGetStyle(DEFAULT, TEXT_SIZE))) Then
-
-					if (IsKeyPressed(KEY_ENTER)) Then
-
-						text0[keyCount] = Asc(!"\n")'\n'
-						keyCount+=1
-
-					elseif (((character >= 32) AndAlso (character < 255)))  Then' TODO: Support Unicode inputs
-
-						text0[keyCount] = character
-						keyCount+=1
-					EndIf
-				EndIf
-			endif
-
-			' Delete characters
-			if (keyCount > 0) Then
-
-				if (IsKeyPressed(KEY_BACKSPACE)) Then
-
-					keyCount-=1
-					text0[keyCount] = Asc(!"\0")
-					framesCounter = 0
-
-					if (keyCount < 0) Then keyCount = 0
-
-				ElseIf (IsKeyDown(KEY_BACKSPACE)) then
-
-					if ((framesCounter > TEXTEDIT_CURSOR_BLINK_FRAMES) AndAlso (framesCounter mod 2) = 0) Then keyCount-=1
-					text0[keyCount] = Asc(!"\0")
-
-					if (keyCount < 0) Then keyCount = 0
-				EndIf
-			endif
-
-			' Calculate cursor position considering text
-			Dim As Byte oneCharText(2)' =  0 }
-			Dim As Integer lastBreakingPos = -1
-
-			'for (integer i = 0 i < keyCount AndAlso currentLine < keyCount i+=1)
-			Dim i As Integer
-			While (i < keyCount) AndAlso (currentLine < keyCount)
-				oneCharText(0) = text0[i]
-				textWidth += (GetTextWidth(@oneCharText(0)) + GuiGetStyle(DEFAULT, TEXT_SPACING))
-
-				if (text0[i] = Asc(" ") orelse text0[i] = Asc(!"\n")) Then lastBreakingPos = i
-
-				if ( text0[i] = Asc(!"\n") orelse textWidth >= textAreaBounds.width) then
-
-					currentLine+=1
-					textWidth = 0
-
-					if (lastBreakingPos > 0) Then
-						i = lastBreakingPos
-
-					else
-						textWidth += (GetTextWidth(@oneCharText(0)) + GuiGetStyle(DEFAULT, TEXT_SPACING))
-					EndIf
-
-					lastBreakingPos = -1
-				EndIf
-				i+=1
-			Wend
-
-			cursor.x = bounds.x + GuiGetStyle(TEXTBOX, BORDER_WIDTH) + GuiGetStyle(TEXTBOX, TEXT_INNER_PADDING) + textWidth - GuiGetStyle(DEFAULT, TEXT_SPACING)
-			cursor.y = bounds.y + GuiGetStyle(TEXTBOX, BORDER_WIDTH) + GuiGetStyle(TEXTBOX, TEXT_INNER_PADDING)/2 + ((GuiGetStyle(DEFAULT, TEXT_SIZE) + GuiGetStyle(TEXTBOX, TEXT_INNER_PADDING))*currentLine)
-
-			' Exit edit mode
-			if (Not CheckCollisionPointRec(mousePointeger, bounds) AndAlso IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) Then pressed = true
-
-		else
-
-			if (CheckCollisionPointRec(mousePointeger, bounds)) Then
-
-				state = GUI_STATE_FOCUSED
-				if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) Then pressed = true
-			EndIf
-		EndIf
-
-		if (pressed) Then framesCounter = 0     ' Reset blinking cursor
-	endif
-	'----------------------------------
-
-	' Draw control
-	'----------------------------------
-	if (state = GUI_STATE_PRESSED) Then
-
-		GuiDrawRectangle(bounds, GuiGetStyle(TEXTBOX, BORDER_WIDTH), Fade(GetColor(GuiGetStyle(TEXTBOX, BORDER + (state*3))), guiAlpha), Fade(GetColor(GuiGetStyle(TEXTBOX, BASE_COLOR_PRESSED)), guiAlpha))
-
-		' Draw blinking cursor
-		if (editMode AndAlso ((framesCounter/20) mod 2 = 0)) Then GuiDrawRectangle(cursor, 0, BLANK, Fade(GetColor(GuiGetStyle(TEXTBOX, BORDER_COLOR_PRESSED)), guiAlpha))
-
-	ElseIf (state = GUI_STATE_DISABLED) Then
-
-		GuiDrawRectangle(bounds, GuiGetStyle(TEXTBOX, BORDER_WIDTH), Fade(GetColor(GuiGetStyle(TEXTBOX, BORDER + (state*3))), guiAlpha), Fade(GetColor(GuiGetStyle(TEXTBOX, BASE_COLOR_DISABLED)), guiAlpha))
-
-	else
-		GuiDrawRectangle(bounds, 1, Fade(GetColor(GuiGetStyle(TEXTBOX, BORDER + (state*3))), guiAlpha), BLANK)
-	EndIf
-	DrawTextRec(guiFont, text0, textAreaBounds, GuiGetStyle(DEFAULT, TEXT_SIZE), GuiGetStyle(DEFAULT, TEXT_SPACING), true, Fade(GetColor(GuiGetStyle(TEXTBOX, TEXT + (state*3))), guiAlpha))
-	'----------------------------------
-
-	return pressed
-End function
+'' TODO <paul>: fix cursor alignment issues
+function GuiTextBoxMulti( bounds as Rectangle, text_ as string, textSize as long, editMode as boolean ) as boolean
+  static as long framesCounter = 0           '' Required for blinking cursor
+  
+  dim as GuiControlState state = guiState
+  dim as boolean pressed = false
+  
+  var textAreaBounds = Rectangle( _
+    bounds.x + GuiGetStyle( TEXTBOX, TEXT_INNER_PADDING ), _
+    bounds.y + GuiGetStyle( TEXTBOX, TEXT_INNER_PADDING ), _
+    bounds.width - 2 * GuiGetStyle( TEXTBOX, TEXT_INNER_PADDING ), _
+    bounds.height - 2 * GuiGetStyle( TEXTBOX, TEXT_INNER_PADDING ) )
+  
+  '' Cursor position, [x, y] values should be updated
+  var cursor = Rectangle( 0, 0, 1, GuiGetStyle( DEFAULT, TEXT_SIZE ) + 2 )
+  
+  dim as long _
+    textWidth = 0, _
+    currentLine = 0
+  
+  '' Update control
+  if( ( state <> GUI_STATE_DISABLED ) andAlso not guiLocked ) then
+    dim as Vector2 mousePoint = GetMousePosition()
+      if( editMode ) then
+        state = GUI_STATE_PRESSED
+        framesCounter += 1
+        
+        dim as long character = GetCharPressed()
+        dim as long keyCount = len( text_ )'strlen( text_ )
+        
+        '' Introduce characters
+        if( keyCount < ( textSize - 1 ) ) then
+          dim as Vector2 textSize = MeasureTextEx( guiFont, text_, GuiGetStyle( DEFAULT, TEXT_SIZE ), GuiGetStyle( DEFAULT, TEXT_SPACING ) )
+          
+          if( textSize.y < ( textAreaBounds.height - GuiGetStyle( DEFAULT, TEXT_SIZE ) ) ) then
+            if( IsKeyPressed( KEY_ENTER ) ) then
+              'text_[ keyCount ] = asc( !"\n" )
+              text_ += !"\n"
+              keyCount += 1
+            elseif( ( ( character >= 32 ) andAlso ( character < 255 ) ) ) then '' TODO: Support Unicode inputs
+              'text_[ keyCount ] = character
+              text_ += chr( character )
+              keyCount += 1
+            end if
+          end if
+        end if
+        
+        '' Delete characters
+        if( keyCount > 0 ) then
+          if( IsKeyPressed( KEY_BACKSPACE ) ) then
+            keyCount -= 1
+            'text_[ keyCount ] = asc( !"\0" )
+            text_ = left( text_, keyCount )
+            framesCounter = 0
+            
+            if( keyCount < 0 ) then keyCount = 0
+          elseif( IsKeyDown( KEY_BACKSPACE ) ) then
+            if( ( framesCounter > TEXTEDIT_CURSOR_BLINK_FRAMES ) andAlso ( framesCounter mod 2 ) = 0 ) then
+              keyCount -= 1
+            end if
+            'text_[ keyCount ] = asc( !"\0" )
+            text_ = left( text_, keyCount )
+            if( keyCount < 0 ) then keyCount = 0
+          end if
+        end if
+        
+        '' Calculate cursor position considering text
+        dim as ubyte oneCharText( 0 to 1 )
+        dim as long lastBreakingPos = -1
+        dim as long i
+        
+        do while( i < keyCount andAlso currentLine < keyCount )
+          oneCharText( 0 ) = text_[ i ]
+          textWidth += ( GetTextWidth( @oneCharText( 0 ) ) + GuiGetStyle( DEFAULT, TEXT_SPACING ) )
+          
+          if( text_[ i ] = asc( " " ) orElse text_[ i ] = asc( !"\n" ) ) then lastBreakingPos = i
+          
+          if( text_[ i ] = asc( !"\n" ) orElse textWidth >= textAreaBounds.width ) then
+            currentLine += 1
+            textWidth = 0
+            
+            if( lastBreakingPos > 0 ) then
+              i = lastBreakingPos
+            else
+              textWidth += ( GetTextWidth( @oneCharText( 0 ) ) + GuiGetStyle( DEFAULT, TEXT_SPACING ) )
+            end if
+            
+            lastBreakingPos = -1
+          end if
+          i += 1
+        loop
+        
+        cursor.x = bounds.x + GuiGetStyle( TEXTBOX, BORDER_WIDTH ) + GuiGetStyle( TEXTBOX, TEXT_INNER_PADDING ) + textWidth - GuiGetStyle( DEFAULT, TEXT_SPACING )
+        cursor.y = bounds.y + GuiGetStyle( TEXTBOX, BORDER_WIDTH ) + GuiGetStyle( TEXTBOX, TEXT_INNER_PADDING ) / 2 + ( ( GuiGetStyle( DEFAULT, TEXT_SIZE ) + GuiGetStyle( TEXTBOX, TEXT_INNER_PADDING ) ) * currentLine )
+        
+        '' Exit edit mode
+        if( not CheckCollisionPointRec( mousePoint, bounds ) andAlso IsMouseButtonPressed( MOUSE_LEFT_BUTTON ) ) then
+          pressed = true
+        end if
+      else
+        if( CheckCollisionPointRec( mousePoint, bounds ) ) then
+          state = GUI_STATE_FOCUSED
+          if( IsMouseButtonPressed( MOUSE_LEFT_BUTTON ) ) then pressed = true
+        end if
+      end if
+      
+      if( pressed ) then framesCounter = 0     '' Reset blinking cursor
+  end if
+  
+  '' Draw control
+  if( state = GUI_STATE_PRESSED ) then
+    GuiDrawRectangle( bounds, GuiGetStyle( TEXTBOX, BORDER_WIDTH ), Fade( GetColor( GuiGetStyle( TEXTBOX, BORDER + ( state * 3 ) ) ), guiAlpha ), Fade( GetColor( GuiGetStyle( TEXTBOX, BASE_COLOR_PRESSED ) ), guiAlpha ) )
+    
+    '' Draw blinking cursor
+    if( editMode andAlso ( ( framesCounter / 20 ) mod 2 = 0 ) ) then
+      GuiDrawRectangle( cursor, 0, BLANK, Fade( GetColor( GuiGetStyle( TEXTBOX, BORDER_COLOR_PRESSED ) ), guiAlpha ) )
+    end if
+  elseif( state = GUI_STATE_DISABLED ) then
+    GuiDrawRectangle( bounds, GuiGetStyle( TEXTBOX, BORDER_WIDTH ), Fade( GetColor( GuiGetStyle( TEXTBOX, BORDER + ( state * 3 ) ) ), guiAlpha ), Fade( GetColor( GuiGetStyle( TEXTBOX, BASE_COLOR_DISABLED ) ), guiAlpha ) )
+  else
+    GuiDrawRectangle( bounds, 1, Fade( GetColor( GuiGetStyle( TEXTBOX, BORDER + ( state * 3 ) ) ), guiAlpha ), BLANK )
+  end if
+  
+  DrawTextRec(guiFont, text_, textAreaBounds, GuiGetStyle(DEFAULT, TEXT_SIZE), GuiGetStyle(DEFAULT, TEXT_SPACING), true, Fade(GetColor(GuiGetStyle(TEXTBOX, TEXT + (state*3))), guiAlpha))
+  
+  return( pressed )
+end function
 
 ' Slider control with pro parameters
 ' NOTE: Other GuiSlider*() controls use this one
-Function GuiSliderPro(bounds As Rectangle, textLeft As Const zstring Ptr, textRight As Const zstring Ptr, value as Single, minValue as Single, maxValue as Single, sliderWidth As Integer ) As Single
+Function GuiSliderPro(bounds As Rectangle, textLeft As Const zstring Ptr, textRight As Const zstring Ptr, value as Single, minValue as Single, maxValue as Single, sliderWidth As long ) As Single
 
 	Dim As GuiControlState state = guiState
 
-	Dim As Integer sliderValue = (((value - minValue)/(maxValue - minValue))*(bounds.width - 2*GuiGetStyle(SLIDER, BORDER_WIDTH)))
+	Dim As long sliderValue = (((value - minValue)/(maxValue - minValue))*(bounds.width - 2*GuiGetStyle(SLIDER, BORDER_WIDTH)))
 
 	Dim As Rectangle slider0 =  Rectangle(bounds.x, bounds.y + GuiGetStyle(SLIDER, BORDER_WIDTH) + GuiGetStyle(SLIDER, SLIDER_PADDING), _
 	0, bounds.height - 2*GuiGetStyle(SLIDER, BORDER_WIDTH) - 2*GuiGetStyle(SLIDER, SLIDER_PADDING) )
@@ -2157,7 +2255,7 @@ End Sub
 
 ' Scroll Bar control
 ' TODO: I feel GuiScrollBar could be simplified...
-Function GuiScrollBar(bounds As Rectangle, value as Integer, minValue as Integer, maxValue as integer) As Integer
+Function GuiScrollBar(bounds As Rectangle, value as long, minValue as long, maxValue as long) As long
 
 	Dim As GuiControlState state = guiState
 
@@ -2165,7 +2263,7 @@ Function GuiScrollBar(bounds As Rectangle, value as Integer, minValue as Integer
 	Dim As boolean isVertical = iif(bounds.width > bounds.height, false , TRUE)
 
 	' The size (width or height depending on scrollbar type) of the spinner buttons
-	Dim As Const integer spinnerSize = IIf(GuiGetStyle(SCROLLBAR, ARROWS_VISIBLE), iif(isVertical, bounds.width - 2*GuiGetStyle(SCROLLBAR, BORDER_WIDTH) , bounds.height - 2*GuiGetStyle(SCROLLBAR, BORDER_WIDTH)) , 0)
+	Dim As Const long spinnerSize = IIf(GuiGetStyle(SCROLLBAR, ARROWS_VISIBLE), iif(isVertical, bounds.width - 2*GuiGetStyle(SCROLLBAR, BORDER_WIDTH) , bounds.height - 2*GuiGetStyle(SCROLLBAR, BORDER_WIDTH)) , 0)
 
 	' Arrow buttons [<] [>] [∧] [∨]
 	Dim As Rectangle arrowUpLeft
@@ -2181,8 +2279,8 @@ Function GuiScrollBar(bounds As Rectangle, value as Integer, minValue as Integer
 	if (value > maxValue) Then value = maxValue
 	if (value < minValue) Then value = minValue
 
-	Dim As Const integer range = maxValue - minValue
-	Dim As Integer sliderSize = GuiGetStyle(SCROLLBAR, SCROLL_SLIDER_SIZE)
+	Dim As Const long range = maxValue - minValue
+	Dim As long sliderSize = GuiGetStyle(SCROLLBAR, SCROLL_SLIDER_SIZE)
 
 	' Calculate rectangles for all of the components
 	arrowUpLeft = Rectangle(bounds.x + GuiGetStyle(SCROLLBAR, BORDER_WIDTH), bounds.y + GuiGetStyle(SCROLLBAR, BORDER_WIDTH), spinnerSize, spinnerSize )
@@ -2213,7 +2311,7 @@ Function GuiScrollBar(bounds As Rectangle, value as Integer, minValue as Integer
 			state = GUI_STATE_FOCUSED
 
 			' Handle mouse wheel
-			Dim As Integer wheel = GetMouseWheelMove()
+			Dim As long wheel = GetMouseWheelMove()
 			if (wheel <> 0) Then value += wheel
 
 			if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) Then
@@ -2254,7 +2352,7 @@ Function GuiScrollBar(bounds As Rectangle, value as Integer, minValue as Integer
 	GuiDrawRectangle(slider0, 0, BLANK, Fade(GetColor(GuiGetStyle(SLIDER, BORDER + state*3)), guiAlpha))         ' Draw the slider bar
 
 	' Draw arrows
-	Dim As Const integer padding = (spinnerSize - GuiGetStyle(SCROLLBAR, ARROWS_SIZE))/2
+	Dim As Const long padding = (spinnerSize - GuiGetStyle(SCROLLBAR, ARROWS_SIZE))/2
 	Dim As Const Vector2 lineCoords(0 To 11) = { _
 	_' Coordinates for <     0,1,2
 	Vector2(arrowUpLeft.x + padding, arrowUpLeft.y + spinnerSize/2 ), _
@@ -2295,9 +2393,9 @@ Function GuiScrollBar(bounds As Rectangle, value as Integer, minValue as Integer
 End function
 
 ' List View control
-Function GuiListView(bounds As Rectangle, text0 As Const zstring Ptr, scrollIndex as integer Ptr, active as Integer) As Integer
+Function GuiListView(bounds As Rectangle, text0 As Const zstring Ptr, scrollIndex as long Ptr, active as long) As long
 
-	Dim As Integer itemsCount = 0
+	Dim As long itemsCount = 0
 	Dim As Const zstring Ptr Ptr items = NULL
 
 	if (text0 <> NULL) Then items = GuiTextSplit(text0, @itemsCount, NULL)
@@ -2306,11 +2404,10 @@ Function GuiListView(bounds As Rectangle, text0 As Const zstring Ptr, scrollInde
 End Function
 
 ' List View control with extended parameters
-Function GuiListViewEx(bounds As Rectangle,  text0 As Const zstring Ptr Ptr, count as integer , focus as Integer ptr, scrollIndex as Integer ptr, active as Integer) As integer
-
+Function GuiListViewEx(bounds As Rectangle, text0 As Const zstring Ptr Ptr, count as long , focus as long ptr, scrollIndex as long ptr, active as long) As long
 	Dim As GuiControlState state = guiState
-	Dim As Integer itemFocused = iif(focus = NULL, -1 , *focus)
-	Dim As Integer itemSelected = active
+	Dim As long itemFocused = iif(focus = NULL, -1 , *focus)
+	Dim As long itemSelected = active
 
 	' Check if we need a scroll bar
 	Dim As boolean useScrollBar = false
@@ -2325,12 +2422,12 @@ Function GuiListViewEx(bounds As Rectangle,  text0 As Const zstring Ptr Ptr, cou
 	if (useScrollBar) Then itemBounds.width -= GuiGetStyle(LISTVIEW, SCROLLBAR_WIDTH)
 
 	' Get items on the list
-	Dim As Integer visibleItems = bounds.height/(GuiGetStyle(LISTVIEW, LIST_ITEMS_HEIGHT) + GuiGetStyle(LISTVIEW, LIST_ITEMS_PADDING))
+	Dim As long visibleItems = bounds.height/(GuiGetStyle(LISTVIEW, LIST_ITEMS_HEIGHT) + GuiGetStyle(LISTVIEW, LIST_ITEMS_PADDING))
 	if (visibleItems > count) Then visibleItems = count
 
-	Dim As Integer startIndex = iif(scrollIndex = NULL, 0 , *scrollIndex)
+	Dim As long startIndex = iif(scrollIndex = NULL, 0 , *scrollIndex)
 	if ((startIndex < 0) OrElse (startIndex > (count - visibleItems))) Then startIndex = 0
-	Dim As Integer endIndex = startIndex + visibleItems
+	Dim As long endIndex = startIndex + visibleItems
 
 	' Update control
 	'----------------------------------
@@ -2344,7 +2441,7 @@ Function GuiListViewEx(bounds As Rectangle,  text0 As Const zstring Ptr Ptr, cou
 			state = GUI_STATE_FOCUSED
 
 			' Check focused and selected item
-			for i As Integer=0 To visibleItems-1
+			for i As long=0 To visibleItems-1
 
 				if (CheckCollisionPointRec(mousePointeger, itemBounds)) then
 
@@ -2366,7 +2463,7 @@ Function GuiListViewEx(bounds As Rectangle,  text0 As Const zstring Ptr Ptr, cou
 
 			if (useScrollBar) Then
 
-				Dim As Integer wheelMove = GetMouseWheelMove()
+				Dim As long wheelMove = GetMouseWheelMove()
 				startIndex -= wheelMove
 
 				if (startIndex < 0) Then
@@ -2391,8 +2488,8 @@ Function GuiListViewEx(bounds As Rectangle,  text0 As Const zstring Ptr Ptr, cou
 	GuiDrawRectangle(bounds, GuiGetStyle(DEFAULT, BORDER_WIDTH), Fade(GetColor(GuiGetStyle(LISTVIEW, BORDER + state*3)), guiAlpha), GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)))     ' Draw background
 
 	' Draw visible items
-	'for (integer i = 0 ((i < visibleItems) AndAlso (text <> NULL)) i+=1)
-	Dim i As Integer=0
+	'for (long i = 0 ((i < visibleItems) AndAlso (text <> NULL)) i+=1)
+	Dim i As long=0
 	While ((i < visibleItems) AndAlso (text <> NULL))
 		if (state = GUI_STATE_DISABLED) Then
 
@@ -2438,8 +2535,8 @@ Function GuiListViewEx(bounds As Rectangle,  text0 As Const zstring Ptr Ptr, cou
 		Dim As Single percentVisible = (endIndex - startIndex)/count
 		Dim As Single sliderSize = bounds.height*percentVisible
 
-		Dim As Integer prevSliderSize = GuiGetStyle(SCROLLBAR, SCROLL_SLIDER_SIZE)   ' Save default slider size
-		Dim As Integer prevScrollSpeed = GuiGetStyle(SCROLLBAR, SCROLL_SPEED) ' Save default scroll speed
+		Dim As long prevSliderSize = GuiGetStyle(SCROLLBAR, SCROLL_SLIDER_SIZE)   ' Save default slider size
+		Dim As long prevScrollSpeed = GuiGetStyle(SCROLLBAR, SCROLL_SPEED) ' Save default scroll speed
 		GuiSetStyle(SCROLLBAR, SCROLL_SLIDER_SIZE, sliderSize)            ' Change slider size
 		GuiSetStyle(SCROLLBAR, SCROLL_SPEED, count - visibleItems) ' Change scroll speed
 
@@ -2568,7 +2665,7 @@ Function GuiColorBarAlpha(bounds As Rectangle, alpha0 as Single) As single
 				alpha0 = (mousePointeger.x - bounds.x)/bounds.width
 				if (alpha0 <= 0.0f) Then Alpha0 = 0.0f
 				if (alpha0 >= 1.0f) Then alpha0 = 1.0f
-				'selector.x = bounds.x + (integer)(((alpha - 0)/(100 - 0))*(bounds.width - 2*GuiGetStyle(SLIDER, BORDER_WIDTH))) - selector.width/2
+				'selector.x = bounds.x + (long)(((alpha - 0)/(100 - 0))*(bounds.width - 2*GuiGetStyle(SLIDER, BORDER_WIDTH))) - selector.width/2
 
 			else
 				state = GUI_STATE_FOCUSED
@@ -2583,12 +2680,12 @@ Function GuiColorBarAlpha(bounds As Rectangle, alpha0 as Single) As single
 	' Draw alpha bar: checked background
 	if (state <> GUI_STATE_DISABLED) Then
 
-		Dim As Integer checksX = bounds.width/COLORBARALPHA_CHECKED_SIZE
-		Dim As Integer checksY = bounds.height/COLORBARALPHA_CHECKED_SIZE
+		Dim As long checksX = bounds.width/COLORBARALPHA_CHECKED_SIZE
+		Dim As long checksY = bounds.height/COLORBARALPHA_CHECKED_SIZE
 
-		for x As Integer=0 To checksX-1
+		for x As long=0 To checksX-1
 
-			for y As Integer=0 To checksY-1
+			for y As long=0 To checksY-1
 
 				Dim As Rectangle check = Rectangle( bounds.x + x*COLORBARALPHA_CHECKED_SIZE, bounds.y + y*COLORBARALPHA_CHECKED_SIZE, COLORBARALPHA_CHECKED_SIZE, COLORBARALPHA_CHECKED_SIZE )
 				GuiDrawRectangle(check, 0, BLANK, iif((((x + y) mod 2)=0), Fade(Fade(GetColor(GuiGetStyle(COLORPICKER, BORDER_COLOR_DISABLED)), 0.4f), guiAlpha) , Fade(Fade(GetColor(GuiGetStyle(COLORPICKER, BASE_COLOR_DISABLED)), 0.4f), guiAlpha) ) )
@@ -2703,15 +2800,15 @@ Function GuiColorPicker(bounds As Rectangle, color0 as Color) As Color
 End Function
 
 ' Message Box control
-Function GuiMessageBox(bounds As Rectangle,  title As Const zstring Ptr,  message As Const zstring Ptr,  buttons As Const zstring Ptr) As integer
+Function GuiMessageBox(bounds As Rectangle,  title As Const zstring Ptr,  message As Const zstring Ptr,  buttons As Const zstring Ptr) As long
 
 	#define MESSAGEBOX_BUTTON_HEIGHT    24
 	#define MESSAGEBOX_BUTTON_PADDING   10
 	#define WINDOW_STATUSBAR_HEIGHT     22
 
-	Dim As Integer clicked = -1    ' Returns clicked button from buttons list, 0 refers to closed window button
+	Dim As long clicked = -1    ' Returns clicked button from buttons list, 0 refers to closed window button
 
-	Dim As Integer buttonsCount = 0
+	Dim As long buttonsCount = 0
 	dim As Const zstring Ptr Ptr buttonsText = GuiTextSplit(buttons, @buttonsCount, NULL)
 	Dim As Rectangle buttonBounds
 	buttonBounds.x = bounds.x + MESSAGEBOX_BUTTON_PADDING
@@ -2731,7 +2828,7 @@ Function GuiMessageBox(bounds As Rectangle,  title As Const zstring Ptr,  messag
 	'----------------------------------
 	if (GuiWindowBox(bounds, title)) Then clicked = 0
 
-	Dim As Integer prevTextAlignment = GuiGetStyle(LABEL, TEXT_ALIGNMENT)
+	Dim As long prevTextAlignment = GuiGetStyle(LABEL, TEXT_ALIGNMENT)
 	GuiSetStyle(LABEL, TEXT_ALIGNMENT, GUI_TEXT_ALIGN_CENTER)
 	GuiLabel(textBounds, message)
 	GuiSetStyle(LABEL, TEXT_ALIGNMENT, prevTextAlignment)
@@ -2739,7 +2836,7 @@ Function GuiMessageBox(bounds As Rectangle,  title As Const zstring Ptr,  messag
 	prevTextAlignment = GuiGetStyle(BUTTON, TEXT_ALIGNMENT)
 	GuiSetStyle(BUTTON, TEXT_ALIGNMENT, GUI_TEXT_ALIGN_CENTER)
 
-	for i As Integer  = 0 to buttonsCount -1
+	for i As long  = 0 to buttonsCount -1
 
 		if (GuiButton(buttonBounds, @buttonsText[i][0])) Then clicked = i + 1
 		buttonBounds.x += (buttonBounds.width + MESSAGEBOX_BUTTON_PADDING)
@@ -2752,7 +2849,7 @@ Function GuiMessageBox(bounds As Rectangle,  title As Const zstring Ptr,  messag
 End Function
 
 ' Text Input Box control, ask for text
-Function GuiTextInputBox(bounds As Rectangle,  title As Const zstring Ptr,  message As Const zstring Ptr,  buttons As Const zstring Ptr, text as zstring Ptr) As integer
+Function GuiTextInputBox(bounds As Rectangle,  title As Const zstring Ptr,  message As Const zstring Ptr,  buttons As Const zstring Ptr, text as zstring Ptr) As long
 
 	#define MESSAGEBOX_BUTTON_PADDING   10
 	#define TEXTINPUTBOX_BUTTON_HEIGHT      24
@@ -2765,9 +2862,9 @@ Function GuiTextInputBox(bounds As Rectangle,  title As Const zstring Ptr,  mess
 	' WARNING: No more than one GuiTextInputBox() should be open at the same time
 	static As boolean textEditMode = false
 
-	Dim As Integer btnIndex = -1
+	Dim As long btnIndex = -1
 
-	Dim As Integer buttonsCount = 0
+	Dim As long buttonsCount = 0
 	Dim As Const zstring Ptr Ptr buttonsText = GuiTextSplit(buttons, @buttonsCount, NULL)
 	Dim As Rectangle buttonBounds
 	buttonBounds.x = bounds.x + TEXTINPUTBOX_BUTTON_PADDING
@@ -2775,7 +2872,7 @@ Function GuiTextInputBox(bounds As Rectangle,  title As Const zstring Ptr,  mess
 	buttonBounds.width = (bounds.width - TEXTINPUTBOX_BUTTON_PADDING*(buttonsCount + 1))/buttonsCount
 	buttonBounds.height = TEXTINPUTBOX_BUTTON_HEIGHT
 
-	Dim As Integer messageInputHeight = bounds.height - WINDOW_STATUSBAR_HEIGHT - GuiGetStyle(STATUSBAR, BORDER_WIDTH) - TEXTINPUTBOX_BUTTON_HEIGHT - 2*TEXTINPUTBOX_BUTTON_PADDING
+	Dim As long messageInputHeight = bounds.height - WINDOW_STATUSBAR_HEIGHT - GuiGetStyle(STATUSBAR, BORDER_WIDTH) - TEXTINPUTBOX_BUTTON_HEIGHT - 2*TEXTINPUTBOX_BUTTON_PADDING
 
 	Dim As Rectangle textBounds
 	if (message <> NULL) Then
@@ -2806,7 +2903,7 @@ Function GuiTextInputBox(bounds As Rectangle,  title As Const zstring Ptr,  mess
 	' Draw message if available
 	if (message <> NULL) Then
 
-		Dim As Integer prevTextAlignment = GuiGetStyle(LABEL, TEXT_ALIGNMENT)
+		Dim As long prevTextAlignment = GuiGetStyle(LABEL, TEXT_ALIGNMENT)
 		GuiSetStyle(LABEL, TEXT_ALIGNMENT, GUI_TEXT_ALIGN_CENTER)
 		GuiLabel(textBounds, message)
 		GuiSetStyle(LABEL, TEXT_ALIGNMENT, prevTextAlignment)
@@ -2814,10 +2911,10 @@ Function GuiTextInputBox(bounds As Rectangle,  title As Const zstring Ptr,  mess
 
 	if (GuiTextBox(textBoxBounds, text, TEXTINPUTBOX_MAX_TEXT_LENGTH, textEditMode)) Then textEditMode = Not textEditMode
 
-	Dim As Integer prevBtnTextAlignment = GuiGetStyle(BUTTON, TEXT_ALIGNMENT)
+	Dim As long prevBtnTextAlignment = GuiGetStyle(BUTTON, TEXT_ALIGNMENT)
 	GuiSetStyle(BUTTON, TEXT_ALIGNMENT, GUI_TEXT_ALIGN_CENTER)
 
-	for i As Integer  = 0 to buttonsCount-1
+	for i As long  = 0 to buttonsCount-1
 
 		if (GuiButton(buttonBounds, @buttonsText[i][0])) Then btnIndex = i + 1
 		buttonBounds.x += (buttonBounds.width + MESSAGEBOX_BUTTON_PADDING)
@@ -2833,7 +2930,7 @@ End Function
 ' NOTE: Returns grid mouse-hover selected cell
 ' About drawing lines at subpixel spacing, simple put, not easy solution:
 ' https:'stackoverflow.com/questions/4435450/2d-opengl-drawing-lines-that-dont-exactly-fit-pixel-raster
-Function GuiGrid(bounds As Rectangle, spacing as Single, subdivs as Integer) As Vector2
+Function GuiGrid(bounds As Rectangle, spacing as Single, subdivs as long) As Vector2
 
 	#if Not Defined(GRID_COLOR_ALPHA)
 	#define GRID_COLOR_ALPHA    0.15f           ' Grid lines alpha amount
@@ -2843,8 +2940,8 @@ Function GuiGrid(bounds As Rectangle, spacing as Single, subdivs as Integer) As 
 	Dim As Vector2 mousePointeger = GetMousePosition()
 	Dim As Vector2 currentCell = Vector2( -1, -1 )
 
-	Dim As Integer linesV = ((bounds.width/spacing))*subdivs + 1
-	Dim As Integer linesH = ((bounds.height/spacing))*subdivs + 1
+	Dim As long linesV = ((bounds.width/spacing))*subdivs + 1
+	Dim As long linesH = ((bounds.height/spacing))*subdivs + 1
 
 	' Update control
 	'----------------------------------
@@ -2867,14 +2964,14 @@ Function GuiGrid(bounds As Rectangle, spacing as Single, subdivs as Integer) As 
 			if (subdivs > 0) Then
 
 				' Draw vertical grid lines
-				for i As Integer  = 0 to linesV-1
+				for i As long  = 0 to linesV-1
 
 					Dim As Rectangle lineV =  Rectangle(bounds.x + spacing * i / subdivs, bounds.y, 1, bounds.height )
 					GuiDrawRectangle(lineV, 0, BLANK, iif(((i mod subdivs) = 0) , Fade(GetColor(GuiGetStyle(DEFAULT, LINE_COLOR)), GRID_COLOR_ALPHA * 4) , Fade(GetColor(GuiGetStyle(DEFAULT, LINE_COLOR)), GRID_COLOR_ALPHA)))
 				Next
 
 				' Draw horizontal grid lines
-				for i As Integer = 0 To linesH-1
+				for i As long = 0 To linesH-1
 
 					dim As Rectangle lineH =  Rectangle(bounds.x, bounds.y + spacing * i / subdivs, bounds.width, 1 )
 					GuiDrawRectangle(lineH, 0, BLANK, iif(((i mod subdivs) = 0) , Fade(GetColor(GuiGetStyle(DEFAULT, LINE_COLOR)), GRID_COLOR_ALPHA * 4) , Fade(GetColor(GuiGetStyle(DEFAULT, LINE_COLOR)), GRID_COLOR_ALPHA)))
@@ -2906,16 +3003,16 @@ Sub GuiLoadStyle( fileName As ZString Ptr)
 		fgets(buffer, 256, rgsFile)
 		if (buffer[0] = Asc("#")) then
 
-			Dim As Integer controlId = 0
-			Dim As Integer propertyId = 0
-			Dim As UInteger propertyValue = 0
+			Dim As long controlId = 0
+			Dim As long propertyId = 0
+			Dim As ulong propertyValue = 0
 
 			while (feof(rgsFile)=0)
 				'printf("%c",buffer[0])
 
 				Select Case(buffer[0])
 
-					case Asc("p")
+					case (asc("p"))
 
 						' Style property: p <control_id> <property_id> <property_value> <property_name>
 
@@ -2923,11 +3020,11 @@ Sub GuiLoadStyle( fileName As ZString Ptr)
 						GuiSetStyle(controlId, propertyId, propertyValue)
 						Exit select
 
-					Case Asc("f")
+					Case (asc("f"))
 
 						' Style font: f <gen_font_size> <charmap_file> <font_file>
 
-						Dim fontSize as Integer = 0
+						Dim fontSize as long = 0
 						Dim As ZString*256 charmapFileName
 						Dim As ZString*256 fontFileName
 						sscanf(buffer, !"f %d %s %[^\r\n]s", @fontSize, charmapFileName, fontFileName)
@@ -2945,7 +3042,7 @@ Sub GuiLoadStyle( fileName As ZString Ptr)
 								Dim As Const ZString Ptr Ptr chars = TextSplit(charValues, Asc(!"\n"), @charsCount)
 
 								Dim as long Ptr values = Cast(long Ptr,RAYGUI_MALLOC(charsCount*sizeof(long)))
-								for i As Integer = 0 to charsCount-1
+								for i As long = 0 to charsCount-1
 									values[i] = TextToInteger(chars[i])
 								Next
 
@@ -2959,14 +3056,10 @@ Sub GuiLoadStyle( fileName As ZString Ptr)
 						EndIf
 						if ((font0.texture.id > 0) AndAlso (font0.charsCount > 0)) Then GuiSetFont(font0)
 						Exit select
-
-						'Case else:
-
 				End Select
 
 				fgets(buffer, 256, rgsFile)
 			Wend
-
 		else
 			tryBinary = true
 		EndIf
@@ -2982,12 +3075,12 @@ Sub GuiLoadStyle( fileName As ZString Ptr)
 		Dim As ZString*5 signature
 		Dim As Short version = 0
 		Dim As Short reserved = 0
-		Dim As Integer propertiesCount = 0
+		Dim As long propertiesCount = 0
 
 		fread(@signature, 1, 4, rgsFile)
 		fread(@version, 1, sizeof(short), rgsFile)
 		fread(@reserved, 1, sizeof(short), rgsFile)
-		fread(@propertiesCount, 1, sizeof(integer), rgsFile)
+		fread(@propertiesCount, 1, sizeof(long), rgsFile)
 
 		if ((signature[0] = Asc("r")) AndAlso _
 			(signature[1] = Asc("G")) AndAlso _
@@ -2996,13 +3089,13 @@ Sub GuiLoadStyle( fileName As ZString Ptr)
 
 			Dim As Short controlId = 0
 			Dim As Short propertyId = 0
-			Dim As Integer propertyValue = 0
+			Dim As long propertyValue = 0
 
-			for i As Integer = 0 to propertiesCount-1
+			for i As long = 0 to propertiesCount-1
 
 				fread(@controlId, 1, sizeof(short), rgsFile)
 				fread(@propertyId, 1, sizeof(short), rgsFile)
-				fread(@propertyValue, 1, sizeof(integer), rgsFile)
+				fread(@propertyValue, 1, sizeof(long), rgsFile)
 
 				if (controlId = 0) Then' DEFAULT control
 
@@ -3011,7 +3104,7 @@ Sub GuiLoadStyle( fileName As ZString Ptr)
 					GuiSetStyle(0,propertyId, propertyValue)
 
 					if (propertyId < NUM_PROPS_DEFAULT) Then
-						for i As Integer  = 1 to NUM_CONTROLS-1
+						for i As long  = 1 to NUM_CONTROLS-1
 							GuiSetStyle(i, propertyId, propertyValue)
 						Next
 					EndIf
@@ -3025,33 +3118,33 @@ Sub GuiLoadStyle( fileName As ZString Ptr)
 			' TODO: Find some mechanism to support it in standalone mode
 			#if Not Defined(RAYGUI_STANDALONE)
 			' Load custom font if available
-			Dim As Integer fontDataSize = 0
-			fread(@fontDataSize, 1, sizeof(integer), rgsFile)
+			Dim As long fontDataSize = 0
+			fread(@fontDataSize, 1, sizeof(long), rgsFile)
 
 			if (fontDataSize > 0) Then
 
 				Dim font0 as Font
-				Dim As Integer fontType = 0   ' 0-Normal, 1-SDF
+				Dim As long fontType = 0   ' 0-Normal, 1-SDF
 				Dim As Rectangle whiteRec
 
-				fread(@font0.baseSize, 1, sizeof(integer), rgsFile)
-				fread(@font0.charsCount, 1, sizeof(integer), rgsFile)
-				fread(@fontType, 1, sizeof(integer), rgsFile)
+				fread(@font0.baseSize, 1, sizeof(long), rgsFile)
+				fread(@font0.charsCount, 1, sizeof(long), rgsFile)
+				fread(@fontType, 1, sizeof(long), rgsFile)
 
 				' Load font white rectangle
 				fread(@whiteRec, 1, sizeof(Rectangle), rgsFile)
 
 				' Load font image parameters
-				Dim As Integer fontImageSize = 0
-				fread(@fontImageSize, 1, sizeof(integer), rgsFile)
+				Dim As long fontImageSize = 0
+				fread(@fontImageSize, 1, sizeof(long), rgsFile)
 
 				if (fontImageSize > 0) then
 
 					Dim As Image imFont
 					imFont.mipmaps = 1
-					fread(@imFont.width, 1, sizeof(integer), rgsFile)
-					fread(@imFont.height, 1, sizeof(integer), rgsFile)
-					fread(@imFont.format, 1, sizeof(integer), rgsFile)
+					fread(@imFont.width, 1, sizeof(long), rgsFile)
+					fread(@imFont.height, 1, sizeof(long), rgsFile)
+					fread(@imFont.format, 1, sizeof(long), rgsFile)
 
 					imFont.data = Cast(zstring Ptr,RAYGUI_MALLOC(fontImageSize))
 					fread(imFont.data, 1, fontImageSize, rgsFile)
@@ -3063,18 +3156,18 @@ Sub GuiLoadStyle( fileName As ZString Ptr)
 
 				' Load font recs data
 				font0.recs = Cast(Rectangle Ptr,RAYGUI_CALLOC(font0.charsCount, sizeof(Rectangle)))
-				for i As integer = 0 to font0.charsCount-1
+				for i As long = 0 to font0.charsCount-1
 					fread(@font0.recs[i], 1, sizeof(Rectangle), rgsFile)
 				Next
 
 				' Load font chars info data
 				font0.chars = cast(CharInfo Ptr,RAYGUI_CALLOC(font0.charsCount, sizeof(CharInfo)))
-				for i As Integer = 0 to font0.charsCount-1
+				for i As long = 0 to font0.charsCount-1
 
-					fread(@font0.chars[i].value, 1, sizeof(integer), rgsFile)
-					fread(@font0.chars[i].offsetX, 1, sizeof(integer), rgsFile)
-					fread(@font0.chars[i].offsetY, 1, sizeof(integer), rgsFile)
-					fread(@font0.chars[i].advanceX, 1, sizeof(integer), rgsFile)
+					fread(@font0.chars[i].value, 1, sizeof(long), rgsFile)
+					fread(@font0.chars[i].offsetX, 1, sizeof(long), rgsFile)
+					fread(@font0.chars[i].offsetY, 1, sizeof(long), rgsFile)
+					fread(@font0.chars[i].advanceX, 1, sizeof(long), rgsFile)
 				Next
 
 				GuiSetFont(font0)
@@ -3174,7 +3267,7 @@ End Sub
 ' Get text with icon id prepended
 ' NOTE: Useful to add icons by name id (enum) instead of
 ' a number that can change between ricon versions
-Function GuiIconText( iconId as Integer, text0 As Const zstring Ptr) As Const ZString Ptr
+Function GuiIconText( iconId as long, text0 As Const zstring Ptr) As Const ZString Ptr
 
 	#if defined(RAYGUI_SUPPORT_ICONS)
 	static As ZString*1024 buffer'[1024]
@@ -3183,7 +3276,7 @@ Function GuiIconText( iconId as Integer, text0 As Const zstring Ptr) As Const ZS
 	sprintf(buffer, "#%03i#", iconId)
 	if (text0 <> NULL) Then
 
-		for i As Integer  = 5 to 1024 -1
+		for i As long  = 5 to 1024 -1
 
 			buffer[i] = text0[i - 5]
 			if (text0[i - 5] = Asc(!"\0")) then exit for
@@ -3199,8 +3292,8 @@ End function
 #if defined(RAYGUI_SUPPORT_ICONS)
 
 ' Get full icons data pointer
-Function GuiGetIcons()  As UInteger Ptr
-	return @guiIcons(0)
+Function GuiGetIcons()  As ulong Ptr
+	return cast( ulong ptr, @guiIcons(0) )
 End function
 ' Load raygui icons file (.rgi)
 ' NOTE: In case nameIds are required, they can be requested with loadIconsName,
@@ -3225,11 +3318,11 @@ Function GuiLoadIcons( fileName As zstring Ptr,  loadIconsName As boolean) As zs
 	'   12+32*i  | 32   | char       | Icon NameId
 	' }
 
-	' Icons data: One bit per pixel, stored as uinteger array (depends on icon size)
-	' S*S pixels/32bit per uinteger = K uinteger per icon
+	' Icons data: One bit per pixel, stored as ulong array (depends on icon size)
+	' S*S pixels/32bit per ulong = K ulong per icon
 	' foreach (icon)
 	'
-	'   ...   | K       | uinteger | Icon Data
+	'   ...   | K       | ulong | Icon Data
 	' }
 
 	Dim As FILE ptr rgiFile = fopen(fileName, "rb")
@@ -3258,7 +3351,7 @@ Function GuiLoadIcons( fileName As zstring Ptr,  loadIconsName As boolean) As zs
 			if (loadIconsName) Then
 
 				guiIconsName = Cast(zstring Ptr ptr,RAYGUI_MALLOC(iconsCount*sizeof(zstring Ptr ptr)))
-				for i As Integer = 0 to iconsCount -1
+				for i As long = 0 to iconsCount -1
 
 					guiIconsName[i] = Cast(zstring Ptr,RAYGUI_MALLOC(RICON_MAX_NAME_LENGTH))
 					fread(guiIconsName[i], 32, 1, rgiFile)
@@ -3267,7 +3360,7 @@ Function GuiLoadIcons( fileName As zstring Ptr,  loadIconsName As boolean) As zs
 			EndIf
 
 			' Read icons data directly over guiIcons data array
-			fread(@guiIcons(0), iconsCount*(iconsSize*iconsSize/32), sizeof(UInteger), rgiFile)
+			fread(@guiIcons(0), iconsCount*(iconsSize*iconsSize/32), sizeof(ulong), rgiFile)
 		EndIf
 
 		fclose(rgiFile)
@@ -3277,13 +3370,13 @@ Function GuiLoadIcons( fileName As zstring Ptr,  loadIconsName As boolean) As zs
 End Function
 
 ' Draw selected icon using rectangles pixel-by-pixel
-Sub GuiDrawIcon( iconId as Integer, position as Vector2 , pixelSize as Integer, color0 as Color)
+Sub GuiDrawIcon( iconId as long, position as Vector2 , pixelSize as long, color0 as Color)
 
 	#define BIT_CHECK(a,b) ((a) and (1 Shl (b)))
 
-	Dim As Integer y=0
-	for i As Integer = 0 to RICON_SIZE*RICON_SIZE\32-1
-		for k As Integer = 0 to 32
+	Dim As long y=0
+	for i As long = 0 to RICON_SIZE*RICON_SIZE\32-1
+		for k As long = 0 to 32
 
 			if (BIT_CHECK(guiIcons(iconId*RICON_DATA_ELEMENTS + i), k)) Then
 				#if Not Defined(RAYGUI_STANDALONE)
@@ -3297,50 +3390,50 @@ Sub GuiDrawIcon( iconId as Integer, position as Vector2 , pixelSize as Integer, 
 End Sub
 
 ' Get icon bit data
-' NOTE: Bit data array grouped as uinteger (ICON_SIZE*ICON_SIZE/32 elements)
-Function GuiGetIconData( iconId as Integer) As UInteger Ptr
+' NOTE: Bit data array grouped as ulong (ICON_SIZE*ICON_SIZE/32 elements)
+Function GuiGetIconData( iconId as long) As ulong Ptr
 
-	static As UInteger iconData(RICON_DATA_ELEMENTS)
-	memset(@iconData(0), 0, RICON_DATA_ELEMENTS*sizeof(UInteger))
+	static As ulong iconData(RICON_DATA_ELEMENTS)
+	memset(@iconData(0), 0, RICON_DATA_ELEMENTS*sizeof(ulong))
 
 	if (iconId < RICON_MAX_ICONS) Then
-		memcpy(@iconData(0), @guiIcons(iconId*RICON_DATA_ELEMENTS), RICON_DATA_ELEMENTS*sizeof(UInteger))
+		memcpy(@iconData(0), @guiIcons(iconId*RICON_DATA_ELEMENTS), RICON_DATA_ELEMENTS*sizeof(ulong))
 	EndIf
 
 	return @iconData(0)
 End Function
 
 ' Set icon bit data
-' NOTE: Data must be provided as uinteger array (ICON_SIZE*ICON_SIZE/32 elements)
-Sub GuiSetIconData( iconId as Integer, data0 as uinteger ptr)
+' NOTE: Data must be provided as ulong array (ICON_SIZE*ICON_SIZE/32 elements)
+Sub GuiSetIconData( iconId as long, data0 as ulong ptr)
 
 	if (iconId < RICON_MAX_ICONS) Then
-		memcpy(@guiIcons(iconId*RICON_DATA_ELEMENTS), data0, RICON_DATA_ELEMENTS*sizeof(UInteger))
+		memcpy(@guiIcons(iconId*RICON_DATA_ELEMENTS), data0, RICON_DATA_ELEMENTS*sizeof(ulong))
 	EndIf
 End Sub
 
 ' Set icon pixel value
-Sub GuiSetIconPixel( iconId as Integer, x as Integer, y as Integer)
+Sub GuiSetIconPixel( iconId as long, x as long, y as long)
 
 	#define BIT_SET(a,b)   ((a) Or (1 shl(b)))
 
 	' This logic works for any RICON_SIZE pixels icons,
-	' For example, in case of 16x16 pixels, every 2 lines fit in one uinteger data element
-	' BIT_SET(guiIcons(iconId*RICON_DATA_ELEMENTS + y\((sizeof(uinteger)*8)\RICON_SIZE)), x + ((y mod (sizeof(UInteger)*8\RICON_SIZE))*RICON_SIZE))
+	' For example, in case of 16x16 pixels, every 2 lines fit in one ulong data element
+	' BIT_SET(guiIcons(iconId*RICON_DATA_ELEMENTS + y\((sizeof(ulong)*8)\RICON_SIZE)), x + ((y mod (sizeof(ulong)*8\RICON_SIZE))*RICON_SIZE))
 End Sub
 
 ' Clear icon pixel value
-Sub GuiClearIconPixel( iconId as Integer, x as Integer, y as Integer)
+Sub GuiClearIconPixel( iconId as long, x as long, y as long)
 
 	#define BIT_CLEAR(a,b) ((a) &= ~((1)<<(b)))
 
 	' This logic works for any RICON_SIZE pixels icons,
-	' For example, in case of 16x16 pixels, every 2 lines fit in one uinteger data element
-	'    BIT_CLEAR(guiIcons[iconId*RICON_DATA_ELEMENTS + y/(sizeof(uinteger)*8/RICON_SIZE)], x + (y mod (sizeof(uinteger)*8/RICON_SIZE)*RICON_SIZE))
+	' For example, in case of 16x16 pixels, every 2 lines fit in one ulong data element
+	'    BIT_CLEAR(guiIcons[iconId*RICON_DATA_ELEMENTS + y/(sizeof(ulong)*8/RICON_SIZE)], x + (y mod (sizeof(ulong)*8/RICON_SIZE)*RICON_SIZE))
 End Sub
 
 ' Check icon pixel value
-function GuiCheckIconPixel( iconId as Integer, x as Integer, y as integer) As boolean
+function GuiCheckIconPixel( iconId as long, x as long, y as long) As boolean
 
 	#define BIT_CHECK(a,b) ((a) and (1 Shl(b)))
 
@@ -3352,7 +3445,7 @@ End Function
 ' Module specific Functions Definition
 '-----------------------------------------=1
 ' Gui get text width using default font
-Function GetTextWidth( text0 As Const zstring Ptr) As Integer
+Function GetTextWidth( text0 As Const zstring Ptr) As long
 
 	Dim As Vector2 size
 
@@ -3364,7 +3457,7 @@ Function GetTextWidth( text0 As Const zstring Ptr) As Integer
 End function
 
 ' Get text bounds considering control bounds
-Function GetTextBounds(control0 as Integer, bounds As Rectangle)As Rectangle
+Function GetTextBounds(control0 as long, bounds As Rectangle)As Rectangle
 
 	Dim As Rectangle textBounds
 	textBounds = bounds
@@ -3396,7 +3489,7 @@ End Function
 
 ' Get text icon if provided and move text cursor
 ' NOTE: We support up to 999 values for iconId
-Function GetTextIcon( text0 As Const zstring Ptr, iconId as Integer ptr) As Const zstring Ptr
+Function GetTextIcon( text0 As Const zstring Ptr, iconId as long ptr) As Const zstring Ptr
 
 	#if defined(RAYGUI_SUPPORT_ICONS)
 	*iconId = -1
@@ -3404,7 +3497,7 @@ Function GetTextIcon( text0 As Const zstring Ptr, iconId as Integer ptr) As Cons
 
 		Dim As ZString*4 iconValue   ' Maximum length for icon value: 3 digits + asc(!"\0")
 
-		Dim As Integer pos1 = 1
+		Dim As long pos1 = 1
 		while ((text0[pos1]<>Asc("#")) AndAlso (pos1 < 4) andalso ((text0[pos1] >= Asc("0")) andalso (text0[pos1] <= Asc("9"))) )
 
 			iconValue[pos1 - 1] = text0[pos1]
@@ -3424,13 +3517,13 @@ Function GetTextIcon( text0 As Const zstring Ptr, iconId as Integer ptr) As Cons
 End function
 
 ' Gui draw text using default font
-Sub GuiDrawText( text0 As Const zstring Ptr, bounds As Rectangle, alignment as Integer, tint as Color) 
+Sub GuiDrawText( text0 As Const zstring Ptr, bounds As Rectangle, alignment as long, tint as Color)
 
 	#define TEXT_VALIGN_PIXEL_OFFSET(h)  int(h Mod 2)     ' Vertical alignment for pixel perfect
 
 	if ((text0 <> NULL) AndAlso (text0[0] <> asc(!"\0"))) Then
-	
-		dim iconId as Integer = 0
+
+		dim iconId as long = 0
 		text0 = GetTextIcon(text0, @iconId)  ' Check text for icon and move cursor
 
 		' Get text position depending on alignment and iconId
@@ -3441,11 +3534,11 @@ Sub GuiDrawText( text0 As Const zstring Ptr, bounds As Rectangle, alignment as I
 		position = Vector2( bounds.x, bounds.y )
 
 		' NOTE: We get text size after icon been processed
-		Dim As Integer textWidth
+		Dim As long textWidth
 		textWidth = GetTextWidth(text0)
 		'textWidth = IIf(textWidth=93,16,textWidth)
-		 
-		Dim As Integer textHeight
+
+		Dim As long textHeight
 		textHeight = GuiGetStyle(GuiControl.DEFAULT, GuiDefaultProperty.TEXT_SIZE)
 
 		#if defined(RAYGUI_SUPPORT_ICONS)
@@ -3466,7 +3559,7 @@ Sub GuiDrawText( text0 As Const zstring Ptr, bounds As Rectangle, alignment as I
 
 			case GUI_TEXT_ALIGN_CENTER:
 
-				position.x = bounds.x + bounds.width/2 - textWidth\2' - TEXT_VALIGN_PIXEL_OFFSET(bounds.width)
+				position.x = bounds.x + bounds.width/2 - textWidth\2 - TEXT_VALIGN_PIXEL_OFFSET(bounds.width)
 				position.y = bounds.y + bounds.height/2 - textHeight/2 + TEXT_VALIGN_PIXEL_OFFSET(bounds.height)
 
 			case GUI_TEXT_ALIGN_RIGHT:
@@ -3488,14 +3581,14 @@ Sub GuiDrawText( text0 As Const zstring Ptr, bounds As Rectangle, alignment as I
 		#If defined(RAYGUI_SUPPORT_ICONS)
 		if (iconId >= 0) Then
 			While iconId>=0
-			' WARNING: If only icon provided, text could be pointing to eof character!
-		' NOTE: We consider icon height, probably different than text size
-			'GuiDrawIcon(iconId, Vector2( position.x, bounds.y + bounds.height/2 - RICON_SIZE/2 + TEXT_VALIGN_PIXEL_OFFSET(bounds.height) ), 1, tint)
-			'hack
-			GuiDrawIcon(iconId, Vector2( position.x-(RICON_SIZE/2 ), bounds.y + bounds.height/2 - RICON_SIZE/2 + TEXT_VALIGN_PIXEL_OFFSET(bounds.height) ), 1, tint)
-			position.x += (RICON_SIZE + ICON_TEXT_PADDING)
-			text0=GetTextIcon(text0,@iconId)
-			wend
+				' WARNING: If only icon provided, text could be pointing to eof character!
+				' NOTE: We consider icon height, probably different than text size
+				GuiDrawIcon(iconId, Vector2( position.x, bounds.y + bounds.height/2 - RICON_SIZE/2 + TEXT_VALIGN_PIXEL_OFFSET(bounds.height) ), 1, tint)
+				'hack
+				'GuiDrawIcon(iconId, Vector2( position.x-(RICON_SIZE/2 ), bounds.y + bounds.height/2 - RICON_SIZE/2 + TEXT_VALIGN_PIXEL_OFFSET(bounds.height) ), 1, tint)
+				position.x += (RICON_SIZE + ICON_TEXT_PADDING)
+				text0=GetTextIcon(text0,@iconId)
+			Wend
 		EndIf
 		#EndIf
 
@@ -3507,7 +3600,7 @@ Sub GuiDrawText( text0 As Const zstring Ptr, bounds As Rectangle, alignment as I
 End sub
 
 ' Gui draw rectangle using default raygui plain style with borders
-Sub GuiDrawRectangle(rec as Rectangle, borderWidth as Integer , borderColor as Color , color0 as Color)
+Sub GuiDrawRectangle(rec as Rectangle, borderWidth as long , borderColor as Color , color0 as Color)
 
 	if (color0.a > 0) Then
 
@@ -3531,7 +3624,7 @@ End Sub
 ' Draw tooltip relatively to bounds
 Sub GuiDrawTooltip(bounds As Rectangle)
 
-	'static As Integer tooltipFramesCounter = 0  ' Not possible gets reseted at second function call!
+	'static As long tooltipFramesCounter = 0  ' Not possible gets reseted at second function call!
 
 	if ((guiTooltipEnabled=TRUE) andalso (guiTooltip <> NULL)) Then
 		if (CheckCollisionPointRec(GetMousePosition(), bounds)) Then
@@ -3550,7 +3643,7 @@ End Sub
 
 ' Split controls text integero multiple strings
 ' Also check for multiple columns (required by GuiToggleGroup())
-Function GuiTextSplit( text0 As Const zstring Ptr, count0 as integer Ptr, textRow as integer ptr)As Const UByte Ptr Ptr 'Static
+Function GuiTextSplit( text0 As Const zstring Ptr, count0 as long Ptr, textRow as long ptr)As Const UByte Ptr Ptr 'Static
 
 	' NOTE: Current implementation returns a copy of the provided string with '\0' (string end delimiter)
 	' inserted between strings defined by "delimiter" parameter. No memory is dynamically allocated,
@@ -3572,12 +3665,12 @@ Function GuiTextSplit( text0 As Const zstring Ptr, count0 as integer Ptr, textRo
 	memset(@buffer(0), 0, TEXTSPLIT_MAX_TEXT_LENGTH)
 
 	result(0) = @buffer(0)
-	dim as integer counter = 1
+	dim as long counter = 1
 
 	if (textRow <> NULL) Then textRow[0] = 0
 
 	' Count how many substrings we have on text and point to every one
-	for i As uInteger = 0 to TEXTSPLIT_MAX_TEXT_LENGTH-1
+	for i As ulong = 0 to TEXTSPLIT_MAX_TEXT_LENGTH-1
 
 		buffer(i) = text0[i]
 		if (buffer(i) = 0) Then
@@ -3738,7 +3831,7 @@ End Function
 
 #if defined(RAYGUI_STANDALONE)
 ' Returns a Color struct from hexadecimal value
-Function GetColor(hexValue As Integer) As Color 
+Function GetColor(hexValue As long) As Color
 
 	Dim color0 as Color
 
@@ -3751,13 +3844,13 @@ Function GetColor(hexValue As Integer) As Color
 End Function
 
 ' Returns hexadecimal value for a Color
-Function ColorToInt(color0 as Color) As Integer 
+Function ColorToInt(color0 as Color) As long
 
 	return ((color0.r Shl 24) or (color.g shl 16) or (color0.b shl 8) or color0.a)
 End Function
 
 ' Check if pointeger is inside rectangle
-Function CheckCollisionPointRec(point0 As Vector2 , rec as Rectangle) As boolean 
+Function CheckCollisionPointRec(point0 As Vector2 , rec as Rectangle) As boolean
 
 	Dim As boolean collision = false
 
@@ -3797,7 +3890,7 @@ End Function
 
 ' Draw rectangle with vertical gradient fill color
 ' NOTE: This function is only used by GuiColorPicker()
-sub DrawRectangleGradientV(posX As Integer,posY integer, width0 As Integer,height As Integer, color1 as Color, color2 as Color)
+sub DrawRectangleGradientV(posX As long,posY long, width0 As long,height As long, color1 as Color, color2 as Color)
 
 	bounds As Rectangle = Rectangle( posX, posY, width0, height )
 	DrawRectangleGradientEx(bounds, color1, color2, color2, color1)
@@ -3808,7 +3901,7 @@ End sub
 
 
 ' Split string integero multiple strings
-function TextSplit( text0 As Const zstring Ptr, delimiter As zstring , count as Integer ptr) As Const zstring Ptr ptr
+function TextSplit( text0 As Const zstring Ptr, delimiter As zstring , count as long ptr) As Const zstring Ptr ptr
 
 ' NOTE: Current implementation returns a copy of the provided string with '\0' (string end delimiter)
 ' inserted between strings defined by "delimiter" parameter. No memory is dynamically allocated,
@@ -3821,14 +3914,14 @@ static As ZString*TEXTSPLIT_MAX_TEXT_BUFFER_LENGTH buffer
 memset(buffer, 0, TEXTSPLIT_MAX_TEXT_BUFFER_LENGTH)
 
 result[0] = buffer
-Dim counter as Integer  = 0
+Dim counter as long  = 0
 
 if (text <> NULL) Then
 
 counter = 1
 
 ' Count how many substrings we have on text and pointeger to every one
-for i As Integer = 0 to TEXTSPLIT_MAX_TEXT_BUFFER_LENGTH -1
+for i As long = 0 to TEXTSPLIT_MAX_TEXT_BUFFER_LENGTH -1
 
 buffer[i] = text[i]
 if (buffer[i] = 0) Then Exit for
@@ -3849,10 +3942,10 @@ End Function
 
 ' Get integereger value from text
 ' NOTE: This function replaces atoi() [stdlib.h]
-Function  TextToInteger( text As Const zstring Ptr) As Integer
+Function  TextToInteger( text As Const zstring Ptr) As long
 
-	Dim value as Integer = 0
-	Dim As Integer sign = 1
+	Dim value as long = 0
+	Dim As long sign = 1
 
 	if ((text[0] = '+') orelse (text[0] = '-')) then
 
@@ -3867,10 +3960,10 @@ Function  TextToInteger( text As Const zstring Ptr) As Integer
 End Function
 
 ' Encode codepointeger integero utf8 text (char array length returned as parameter)
-function CodepointToUtf8(codepoint As Integer , byteLength As Integer ptr)As Const zstring Ptr
+function CodepointToUtf8(codepoint As long , byteLength As long ptr)As Const zstring Ptr
 
 	static As ZString*6 utf8
-	Dim As Integer length = 0
+	Dim As long length = 0
 
 	if (codepointeger <= &h7f) Then
 
