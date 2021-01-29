@@ -748,7 +748,7 @@ end enum
   or to pass a native array to raylib's functions.
 '/
 #if not defined( toPtrArray )
-  private function toPtrArray( a() as string ) as zstring ptr ptr
+  private function toPtrArray( a() as string ) as const zstring ptr ptr
     static as zstring ptr p()
     
     redim p( lbound( a ) to ubound( a ) )
@@ -1076,8 +1076,7 @@ declare function FormatText alias "TextFormat"(byval text as const zstring ptr, 
 declare function TextSubtext(byval text as const zstring ptr, byval position as long, byval length as long) as const zstring ptr
 declare function TextReplace(byval text as zstring ptr, byval replace as const zstring ptr, byval by as const zstring ptr) as zstring ptr
 declare function TextInsert(byval text as const zstring ptr, byval insert as const zstring ptr, byval position as long) as zstring ptr
-declare function TextJoin overload(byval textList as const zstring ptr ptr, byval count as long, byval delimiter as const zstring ptr) as const zstring ptr
-declare function TextJoin( textList() as string, byval count as long, byval delimiter as const zstring ptr) as const zstring ptr
+declare function TextJoin overload( as const zstring ptr ptr, byval count as long, byval delimiter as const zstring ptr) as const zstring ptr
 declare function TextSplit(byval text as const zstring ptr, byval delimiter as byte, byval count as long ptr) as const zstring ptr ptr
 declare sub TextAppend(byval text as zstring ptr, byval append as const zstring ptr, byval position as long ptr)
 declare function TextFindIndex(byval text as const zstring ptr, byval find as const zstring ptr) as long
@@ -1243,8 +1242,11 @@ declare sub SetAudioStreamVolume(byval stream as AudioStream, byval volume as si
 declare sub SetAudioStreamPitch(byval stream as AudioStream, byval pitch as single)
 declare sub SetAudioStreamBufferSizeDefault(byval size as long)
 
-private function TextJoin( textList() as string, byval count as long, byval delimiter as const zstring ptr) as const zstring ptr
-  return( TextJoin( toPtrArray( textList() ), count, delimiter ) )
-end function
-
 end extern
+
+'' Overload to use a FreeBasic array instead of a C array
+declare function TextJoin( a() as string, byval count as long, byval delimiter as const zstring ptr) as const zstring ptr
+
+private function TextJoin( a() as string, byval count as long, byval delimiter as const zstring ptr) as const zstring ptr
+  return( TextJoin( toPtrArray( a() ), count, delimiter ) )
+end function

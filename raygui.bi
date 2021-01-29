@@ -3146,7 +3146,7 @@ Sub GuiLoadStyle( fileName As ZString Ptr)
 						GuiSetStyle(controlId, propertyId, propertyValue)
 						Exit select
 
-					Case Asc("f"):
+					Case Asc("f")
 
 						' Style font: f <gen_font_size> <charmap_file> <font_file>
 
