@@ -1,1 +1,6 @@
 * text eol=crlf
+*.mp3 binary
+*.ogg binary
+*.wav binary
+*.bmp binary
+*.png binary
