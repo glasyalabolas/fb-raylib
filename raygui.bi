@@ -133,7 +133,7 @@
 #define RAYGUI_VERSION  "2.6-dev"
 
 #If Not defined(RAYGUI_STANDALONE)
-#include Once "../raylib.bi"
+#include Once "raylib.bi"
 #endif
 
 ' Define functions scope to be used internally (static) or externally (extern) to the module including this file
@@ -1910,16 +1910,15 @@ End function
 Function GuiValueBox(bounds As Rectangle, text0 As Const zstring Ptr, value as long Ptr, minValue as long, maxValue as long, editMode as boolean) As boolean
 	#if Not Defined(VALUEBOX_MAX_CHARS)
 	#define VALUEBOX_MAX_CHARS  32
-	#endif
+	#EndIf
 
 	static As long framesCounter = 0           ' Required for blinking cursor
 
 	Dim As GuiControlState state = guiState
 	Dim As boolean pressed = false
 
-	Dim As string textValue
+	Dim As String textValue
 	textValue = str( *value )
-
 	Dim As Rectangle textBounds
 
 	if (text0 <> NULL) Then
@@ -1942,8 +1941,7 @@ Function GuiValueBox(bounds As Rectangle, text0 As Const zstring Ptr, value as l
 
 			framesCounter+=1
 
-			Dim As long keyCount = len(textValue)
-
+			Dim As long keyCount = Len(textValue)
 			' Only allow keys in range [48..57]
 			if (keyCount < VALUEBOX_MAX_CHARS) Then
 				Dim As long maxWidth = bounds.width
@@ -1956,7 +1954,7 @@ Function GuiValueBox(bounds As Rectangle, text0 As Const zstring Ptr, value as l
 					EndIf
 				EndIf
 			endif
-
+ 
 			' Delete text
 			if (keyCount > 0) Then
 				if (IsKeyPressed(KEY_BACKSPACE)) Then
@@ -1974,21 +1972,16 @@ Function GuiValueBox(bounds As Rectangle, text0 As Const zstring Ptr, value as l
 			EndIf
 
 			if (valueHasChanged) Then
-				*value = clng( val( textValue ) )
-				if (*value > maxValue) Then
-					*value = maxValue
-				ElseIf (*value < minValue) Then
-					*value = minValue
-				EndIf
+				*value = CLng( val( textValue ) )
+				if (*value > maxValue) Then *value = maxValue
+				If (*value < minValue) Then *value = minValue
 			EndIf
 
-			if (IsKeyPressed(KEY_ENTER) OrElse ( Not CheckCollisionPointRec(mousePointeger, bounds) AndAlso IsMouseButtonPressed(MOUSE_LEFT_BUTTON))) Then
-				pressed = true
-			elseif (*value > maxValue) Then
-				*value = maxValue
-			elseif (*value < minValue) Then
-				*value = minValue
-			EndIf
+			if (IsKeyPressed(KEY_ENTER) OrElse ( Not CheckCollisionPointRec(mousePointeger, bounds) AndAlso IsMouseButtonPressed(MOUSE_LEFT_BUTTON))) Then pressed = true
+		Else
+			If (*value > maxValue) Then *value = maxValue
+			if (*value < minValue) Then *value = minValue
+			
 
 			if (CheckCollisionPointRec(mousePointeger, bounds)) Then
 				state = GUI_STATE_FOCUSED
@@ -3122,7 +3115,7 @@ Function GuiGrid(bounds As Rectangle, spacing as Single, subdivs as long) As Vec
 
 	' Draw control
 	'----------------------------------
-	Select case as const (state)
+	Select case (state)
 
 		case GUI_STATE_NORMAL:
 
@@ -3637,7 +3630,7 @@ Function GetTextBounds(control0 as long, bounds As Rectangle)As Rectangle
 	textBounds.height = bounds.height - 2*GuiGetStyle(control0, BORDER_WIDTH)
 
 	' Consider TEXT_PADDING properly, depends on control type and TEXT_ALIGNMENT
-	Select Case as const (control0)
+	Select Case (control0)
 
 		case COMBOBOX:
 			bounds.width -= (GuiGetStyle(control0, COMBO_BUTTON_WIDTH) + GuiGetStyle(control0, COMBO_BUTTON_PADDING))
@@ -3719,7 +3712,7 @@ Sub GuiDrawText( text0 As Const zstring Ptr, bounds As Rectangle, alignment as l
 		EndIf
 		#endif
 		' Check guiTextAlign global variables
-		Select Case as const(alignment)
+		Select Case (alignment)
 
 			case GUI_TEXT_ALIGN_LEFT:
 
@@ -3956,7 +3949,7 @@ Function ConvertHSVtoRGB(hsv as Vector3) As Vector3
 	q = hsv.z*(1.0f - (hsv.y*ff))
 	t = hsv.z*(1.0f - (hsv.y*(1.0f - ff)))
 	'Print i
-	Select Case as const(i)
+	Select Case (i)
 
 		case 0:
 
